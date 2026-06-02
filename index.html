@@ -606,7 +606,7 @@ table.dt tr:hover td{background:#fff8f6}
 
 <script>
 const APIFY_TOKEN = 'apify_api_PfXmaXdGkkzyemUvO3Xancc9fkMLDS1ewRMp';
-let GEMINI_KEY = 'AQ.Ab8RN6LR2ieaKYmOO2YX6Fh0o-DBDQHZbjVS5zIdXuvTEm1cqA';
+let GEMINI_KEY = 'AQ.Ab8RN6KD5dK9CuhAzbz-aiNEWcmRQ8hQxzHNurZQ13Z9COD2nQ';
 const GEMINI_MODELS = ['gemini-2.5-flash-preview-05-20','gemini-2.0-flash','gemini-2.0-flash-lite'];
 
 let currentData = null;
@@ -779,8 +779,8 @@ DATA:\n${summary}`;
 
   let text = '';
   for (const model of GEMINI_MODELS) {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GEMINI_KEY}` },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 4000 } })
     });
     const data = await res.json();
@@ -866,7 +866,7 @@ async function startApifyRun(area) {
   let res;
   try {
     res = await fetch(`https://api.apify.com/v2/acts/compass~crawler-google-places/runs?token=${APIFY_TOKEN}`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${GEMINI_KEY}`},
       body:JSON.stringify({searchStringsArray:[`restaurants near ${area} Bangkok`],maxCrawledPlacesPerSearch:20,language:'en',maxReviews:0,exportPlaceUrls:true})
     });
   } catch(e) { throw new Error('Network error — CORS blocks API from file://. Deploy to Vercel/Netlify first.'); }
@@ -916,8 +916,8 @@ DATA:\n${summary}`;
 
   let text='';
   for(const model of GEMINI_MODELS){
-    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{
+      method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${GEMINI_KEY}`},
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.2,maxOutputTokens:4000}})
     });
     const data=await res.json();
@@ -977,8 +977,8 @@ async function runCustomScenario() {
   try {
     let text = '';
     for (const model of GEMINI_MODELS) {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${GEMINI_KEY}`},
         body: JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.3,maxOutputTokens:200} })
       });
       const data = await res.json();
@@ -1100,8 +1100,8 @@ async function doAsk(){
   try{
     let text='';
     for(const model of GEMINI_MODELS){
-      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`,{
-        method:'POST',headers:{'Content-Type':'application/json'},
+      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{
+        method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${GEMINI_KEY}`},
         body:JSON.stringify({contents:[{parts:[{text:sysPrompt+'\n\nQ: '+q}]}],generationConfig:{temperature:0.3,maxOutputTokens:600}})
       });
       const data=await res.json();
