@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,4 +60,1374 @@ body{
 .badges{display:flex;gap:0.5rem}
 .badge{
   font-size:0.7rem;font-weight:700;padding:0.3rem 0.7rem;border-radius:100px;
-Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
+  letter-spacing:0.04em;text-transform:uppercase;
+}
+.badge-pink{background:var(--pink-dim);color:var(--pink);border:1.5px solid var(--pink-border)}
+.badge-mint{background:var(--mint-dim);color:var(--mint);border:1.5px solid var(--mint-border)}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;
+  padding:3rem 1.5rem 1.5rem;
+  background:linear-gradient(180deg,#fde8f0 0%,#fdf6f0 100%);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'🌸🍜🌸';font-size:1.2rem;
+  position:absolute;top:1rem;left:50%;transform:translateX(-50%);
+  opacity:0.4;letter-spacing:1rem;
+}
+.hero h1{
+  font-family:'Lora',serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  color:#c0394b;
+  line-height:1.2;
+  margin-bottom:0.5rem;
+  animation:fadeUp 0.5s ease both;
+}
+.hero h1 em{font-style:italic;color:var(--peach)}
+.hero p{
+  font-size:0.95rem;color:var(--text2);
+  max-width:480px;margin:0 auto 1.5rem;
+  animation:fadeUp 0.5s 0.1s ease both;
+}
+
+/* ── SEARCH ── */
+.search-wrap{
+  max-width:640px;margin:0 auto;
+  animation:fadeUp 0.5s 0.15s ease both;
+  position:relative;z-index:1;
+}
+.search-box{
+  display:flex;
+  background:var(--card);
+  border:2px solid var(--pink-border);
+  border-radius:50px;
+  overflow:hidden;
+  box-shadow:var(--shadow-lg);
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.search-box:focus-within{
+  border-color:var(--pink);
+  box-shadow:0 0 0 4px rgba(244,113,154,0.12),var(--shadow-lg);
+}
+.search-icon{padding:0 1rem 0 1.4rem;display:flex;align-items:center;font-size:1.1rem;color:var(--pink)}
+.search-input{
+  flex:1;background:transparent;border:none;outline:none;
+  padding:0.85rem 0.5rem;
+  font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--text);font-weight:600;
+}
+.search-input::placeholder{color:var(--muted);font-weight:500}
+.search-btn{
+  margin:0.35rem 0.35rem 0.35rem 0;
+  padding:0 1.4rem;
+  background:linear-gradient(135deg,var(--pink),var(--peach));
+  border:none;border-radius:50px;
+  color:#fff;font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:800;
+  cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;
+  transition:opacity 0.15s,transform 0.15s;
+  white-space:nowrap;
+}
+.search-btn:hover:not(:disabled){opacity:0.9;transform:scale(1.02)}
+.search-btn:disabled{opacity:0.45;cursor:not-allowed}
+
+.quick-btns{
+  display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center;
+  margin-top:0.9rem;
+  animation:fadeUp 0.5s 0.2s ease both;
+}
+.quick-label{font-size:0.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;align-self:center}
+.quick-btn{
+  padding:0.3rem 0.85rem;border-radius:100px;
+  border:1.5px solid var(--border2);background:var(--card);
+  color:var(--text2);font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;
+  cursor:pointer;transition:all 0.15s;
+}
+.quick-btn:hover{border-color:var(--pink);color:var(--pink);background:var(--pink-dim)}
+.quick-btn.active{border-color:var(--pink);color:var(--pink);background:var(--pink-dim)}
+
+/* ── PROGRESS ── */
+.progress-wrap{
+  max-width:640px;margin:1rem auto 0;
+  background:var(--card);border:1.5px solid var(--border);border-radius:16px;
+  padding:1rem 1.2rem;box-shadow:var(--shadow);display:none;
+}
+.progress-wrap.active{display:block}
+.progress-steps{display:flex;gap:0;margin-bottom:0.6rem;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.progress-step{
+  flex:1;padding:0.45rem 0.4rem;text-align:center;
+  font-size:0.65rem;font-weight:700;color:var(--muted);
+  background:var(--card2);border-right:1px solid var(--border);
+  transition:all 0.3s;letter-spacing:0.02em;
+}
+.progress-step:last-child{border-right:none}
+.progress-step.active{background:var(--pink-dim);color:var(--pink)}
+.progress-step.done{background:var(--mint-dim);color:var(--mint)}
+.progress-bar-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:0.5rem}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--peach));border-radius:3px;transition:width 0.5s ease;width:0%}
+.progress-msg{font-size:0.75rem;color:var(--text2);font-weight:600;text-align:center}
+
+/* ── ERROR ── */
+.error-box{
+  max-width:640px;margin:0.75rem auto 0;padding:0.85rem 1rem;
+  background:var(--red-dim);border:1.5px solid var(--red-border);border-radius:12px;
+  font-size:0.82rem;color:var(--red);font-weight:600;display:none;
+}
+.error-box.active{display:block}
+
+/* ── CORS ── */
+#cors-warn{
+  max-width:640px;margin:0.75rem auto 0;padding:0.85rem 1rem;
+  background:var(--amber-dim);border:1.5px solid rgba(245,166,35,0.3);border-radius:12px;
+  font-size:0.8rem;color:#b07800;font-weight:600;display:none;line-height:1.7;
+}
+#cors-warn a{color:#b07800}
+
+/* ── MAIN PAGE WRAPPER ── */
+.page{max-width:1060px;margin:0 auto;padding:0 1.5rem 4rem}
+
+/* ── DEFAULT DATA BANNER ── */
+.default-banner{
+  text-align:center;padding:0.6rem 1rem;
+  background:linear-gradient(90deg,var(--pink-dim),var(--peach-dim));
+  border:1.5px solid var(--pink-border);border-radius:12px;
+  font-size:0.78rem;color:#c0394b;font-weight:700;
+  margin:1.5rem 0 0;
+}
+
+/* ── SECTION ── */
+.section-head{
+  display:flex;align-items:center;gap:0.65rem;
+  padding:0.6rem 1rem;margin:1.8rem 0 1rem;
+  background:var(--card);border:1.5px solid var(--border);border-radius:12px;
+  cursor:pointer;user-select:none;box-shadow:var(--shadow);
+  transition:border-color 0.15s;
+}
+.section-head:hover{border-color:var(--pink-border)}
+.section-tag{
+  font-size:0.67rem;font-weight:800;padding:0.2rem 0.55rem;border-radius:100px;
+  letter-spacing:0.06em;text-transform:uppercase;
+}
+.tag-pink{background:var(--pink-dim);color:var(--pink);border:1.5px solid var(--pink-border)}
+.tag-mint{background:var(--mint-dim);color:var(--mint);border:1.5px solid var(--mint-border)}
+.tag-red{background:var(--red-dim);color:var(--red);border:1.5px solid var(--red-border)}
+.tag-amber{background:var(--amber-dim);color:var(--amber);border:1.5px solid rgba(245,166,35,0.3)}
+.section-title{font-size:0.88rem;font-weight:800;color:var(--text)}
+.section-toggle{margin-left:auto;font-size:0.8rem;color:var(--muted)}
+.sbadge{font-size:0.68rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:100px}
+.sbadge-red{background:var(--red-dim);color:var(--red);border:1.5px solid var(--red-border)}
+.sbadge-amber{background:var(--amber-dim);color:var(--amber);border:1.5px solid rgba(245,166,35,0.3)}
+
+/* ── STATS ── */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0.75rem;margin-bottom:0.5rem;
+}
+.stat-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1.2rem;box-shadow:var(--shadow);
+  transition:transform 0.2s;
+}
+.stat-card:hover{transform:translateY(-2px)}
+.stat-num{font-size:1.9rem;font-weight:900;color:var(--pink);line-height:1}
+.stat-label{font-size:0.7rem;font-weight:800;color:var(--text2);margin-top:0.3rem;text-transform:uppercase;letter-spacing:0.06em}
+.stat-sub{font-size:0.7rem;color:var(--muted);margin-top:0.1rem}
+
+/* ── SCENARIO TABS ── */
+.sc-tabs{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.sc-tab{
+  padding:0.35rem 0.9rem;border-radius:100px;
+  border:1.5px solid var(--border2);background:var(--card);
+  color:var(--text2);font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;
+  cursor:pointer;transition:all 0.15s;
+}
+.sc-tab:hover{border-color:var(--pink);color:var(--pink);background:var(--pink-dim)}
+.sc-tab.active{border-color:var(--pink);background:var(--pink-dim);color:var(--pink)}
+
+/* ── TOP 3 ── */
+.top3-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.rec-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:18px;
+  overflow:hidden;box-shadow:var(--shadow);
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.rec-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.rec-card.rank1{border-color:var(--pink-border);box-shadow:0 4px 20px rgba(244,113,154,0.15)}
+.rec-head{
+  padding:1.1rem 1.1rem 0.9rem;
+  background:linear-gradient(135deg,#fff5f8,#fff9f5);
+  border-bottom:1.5px solid var(--border);position:relative;
+}
+.rank-pin{
+  position:absolute;top:1rem;right:1rem;
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;font-weight:900;
+}
+.rp1{background:var(--pink-dim);color:var(--pink);border:1.5px solid var(--pink-border)}
+.rp2{background:rgba(150,150,150,0.1);color:#999;border:1.5px solid #ddd}
+.rp3{background:rgba(200,140,60,0.1);color:#b07030;border:1.5px solid rgba(200,140,60,0.3)}
+.rec-name{font-size:0.95rem;font-weight:800;color:var(--text);padding-right:2.2rem;margin-bottom:0.2rem;line-height:1.3}
+.rec-sub{font-size:0.72rem;color:var(--muted);margin-bottom:0.6rem}
+.rec-score-row{display:flex;align-items:baseline;gap:0.4rem}
+.rec-score{font-size:1.5rem;font-weight:900;color:var(--pink)}
+.rec-score-max{font-size:0.7rem;color:var(--muted)}
+.rec-rating{font-size:0.75rem;color:var(--text2)}
+.rec-body{padding:0.9rem 1.1rem}
+.rec-tags{display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:0.75rem}
+.rtag{
+  font-size:0.67rem;font-weight:700;padding:0.18rem 0.5rem;border-radius:100px;
+  background:var(--mint-dim);color:var(--mint);border:1.5px solid var(--mint-border);
+}
+.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.3rem;margin-bottom:0.75rem}
+.mini-s{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.35rem 0.4rem;text-align:center}
+.mini-cat{font-size:0.58rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.mini-val{font-size:0.8rem;font-weight:900;color:var(--text)}
+.rec-note{font-size:0.74rem;color:var(--text2);line-height:1.5;margin-bottom:0.4rem}
+.rec-warn{font-size:0.71rem;color:var(--red);background:var(--red-dim);border:1.5px solid var(--red-border);border-radius:8px;padding:0.3rem 0.5rem;margin-top:0.4rem;font-weight:600}
+.rec-link{
+  display:block;margin:0 1rem 1rem;padding:0.55rem;border-radius:100px;
+  border:1.5px solid var(--pink-border);background:var(--pink-dim);
+  color:var(--pink);text-decoration:none;font-size:0.75rem;text-align:center;
+  font-weight:800;letter-spacing:0.04em;transition:all 0.15s;
+}
+.rec-link:hover{background:var(--pink);color:#fff}
+
+/* ── AI ASK ── */
+.ask-box{background:var(--card);border:1.5px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.ask-chips{display:flex;gap:0.35rem;flex-wrap:wrap;padding:0.75rem 1rem;border-bottom:1.5px solid var(--border);background:var(--card2)}
+.ask-chip{
+  font-size:0.72rem;font-weight:700;padding:0.25rem 0.65rem;border-radius:100px;
+  border:1.5px solid var(--border2);background:var(--card);color:var(--text2);
+  cursor:pointer;transition:all 0.15s;
+}
+.ask-chip:hover{border-color:var(--pink);color:var(--pink);background:var(--pink-dim)}
+.ask-row{display:flex;border-bottom:1.5px solid var(--border)}
+.ask-input{
+  flex:1;background:transparent;border:none;outline:none;
+  padding:0.85rem 1rem;font-family:'Nunito',sans-serif;font-size:0.88rem;
+  color:var(--text);font-weight:600;
+}
+.ask-input::placeholder{color:var(--muted)}
+.ask-btn{
+  padding:0 1.2rem;background:transparent;border:none;
+  border-left:1.5px solid var(--border);
+  color:var(--pink);font-family:'Nunito',sans-serif;font-size:0.78rem;
+  font-weight:800;cursor:pointer;transition:background 0.15s;white-space:nowrap;
+}
+.ask-btn:hover:not(:disabled){background:var(--pink-dim)}
+.ask-btn:disabled{color:var(--muted);cursor:not-allowed}
+.ask-thinking{
+  padding:0.85rem 1rem;font-size:0.8rem;color:var(--muted);font-weight:600;
+  display:none;align-items:center;gap:0.5rem;border-bottom:1.5px solid var(--border);
+}
+.ask-thinking.active{display:flex}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--pink);animation:blink 1s infinite}
+.dot:nth-child(2){animation-delay:0.2s}.dot:nth-child(3){animation-delay:0.4s}
+@keyframes blink{0%,80%,100%{opacity:0.2}40%{opacity:1}}
+.ask-answer{display:none}
+.ask-answer.active{display:block}
+.ask-q{
+  padding:0.65rem 1rem;background:var(--pink-dim);
+  font-size:0.72rem;font-weight:700;color:var(--pink);
+  border-bottom:1.5px solid var(--pink-border);
+}
+.ask-body{padding:1rem 1.1rem;font-size:0.87rem;line-height:1.8;color:var(--text)}
+.ask-body p{margin-bottom:0.5rem}.ask-body p:last-child{margin-bottom:0}
+.ask-body strong{color:var(--pink);font-weight:800}
+.ask-body ul{margin:0.35rem 0 0.55rem 0;list-style:none;display:flex;flex-direction:column;gap:0.25rem}
+.ask-body li{
+  padding:0.35rem 0.65rem;background:var(--card2);
+  border-left:3px solid var(--pink-border);border-radius:0 8px 8px 0;
+  font-size:0.84rem;color:var(--text2);
+}
+.ask-body li strong{color:var(--text)}
+.ask-err{padding:0.85rem 1rem;font-size:0.78rem;color:var(--red);font-weight:600;display:none}
+.ask-err.active{display:block}
+
+/* ── REVIEW ── */
+.review-list{display:flex;flex-direction:column;gap:0.65rem}
+.review-item{background:var(--card);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.review-item.crit{border-left:4px solid var(--red)}
+.review-item.warn{border-left:4px solid var(--amber)}
+.review-h{padding:0.75rem 1rem;display:flex;align-items:center;gap:0.65rem;border-bottom:1.5px solid var(--border);background:var(--card2)}
+.sev{font-size:0.65rem;font-weight:800;padding:0.2rem 0.5rem;border-radius:100px;text-transform:uppercase;letter-spacing:0.05em}
+.sev-crit{background:var(--red-dim);color:var(--red);border:1.5px solid var(--red-border)}
+.sev-warn{background:var(--amber-dim);color:var(--amber);border:1.5px solid rgba(245,166,35,0.3)}
+.review-name{font-size:0.88rem;font-weight:800;color:var(--text)}
+.review-sub{font-size:0.72rem;color:var(--muted);margin-left:auto}
+.review-flags{padding:0.75rem 1rem;display:flex;flex-direction:column;gap:0.45rem}
+.rflag{display:flex;gap:0.55rem;align-items:flex-start}
+.fl{font-size:0.64rem;font-weight:800;padding:0.15rem 0.4rem;border-radius:100px;white-space:nowrap;margin-top:0.15rem}
+.fl-red{background:var(--red-dim);color:var(--red);border:1.5px solid var(--red-border)}
+.fl-amber{background:var(--amber-dim);color:var(--amber);border:1.5px solid rgba(245,166,35,0.3)}
+.rflag-text{font-size:0.8rem;color:var(--text2);line-height:1.5}
+.review-footer-note{
+  margin-top:0.65rem;padding:0.65rem 1rem;background:var(--card);
+  border:1.5px solid var(--border);border-radius:12px;
+  font-size:0.73rem;color:var(--muted);font-weight:600;
+}
+
+/* ── TABLE ── */
+.filter-row{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;margin-bottom:0.85rem}
+.fl-label{font-size:0.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em}
+.fl-select{
+  background:var(--card);border:1.5px solid var(--border2);border-radius:100px;
+  color:var(--text);font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;
+  padding:0.3rem 0.7rem;cursor:pointer;outline:none;
+}
+.fl-select:hover{border-color:var(--pink)}
+.price-wrap{display:flex;align-items:center;gap:0.4rem}
+.price-range{accent-color:var(--pink);cursor:pointer}
+.price-val{font-size:0.75rem;font-weight:800;color:var(--pink);min-width:64px}
+.tbl-wrap{overflow-x:auto;border:1.5px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
+table.dt{width:100%;border-collapse:collapse;font-size:0.78rem}
+table.dt th{
+  background:linear-gradient(135deg,#fff5f8,#fff9f5);
+  padding:0.65rem 0.75rem;text-align:left;
+  font-size:0.67rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;
+  color:var(--text2);border-bottom:1.5px solid var(--border);white-space:nowrap;
+}
+table.dt td{padding:0.65rem 0.75rem;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+table.dt tr:last-child td{border-bottom:none}
+table.dt tr:hover td{background:#fff8f6}
+.td-name{white-space:normal!important;font-weight:700;max-width:180px;color:var(--text)}
+.td-price{font-weight:800;color:var(--pink)}
+.pill{display:inline-flex;align-items:center;justify-content:center;border-radius:100px;padding:0.15rem 0.5rem;font-size:0.65rem;font-weight:700}
+.pg{background:var(--mint-dim);color:var(--mint);border:1px solid var(--mint-border)}
+.pr{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border)}
+.pa{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,0.3)}
+.pm{background:rgba(0,0,0,0.04);color:var(--muted);border:1px solid var(--border)}
+.map-link{
+  color:var(--pink);text-decoration:none;font-size:0.68rem;font-weight:800;
+  border:1.5px solid var(--pink-border);padding:0.15rem 0.45rem;border-radius:100px;
+  transition:all 0.15s;
+}
+.map-link:hover{background:var(--pink);color:#fff}
+.no-rows{text-align:center;padding:2rem;color:var(--muted);font-size:0.82rem;font-weight:700}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  padding:3rem 2rem;text-align:center;
+  border:2px dashed var(--border2);border-radius:18px;margin:1.5rem 0;
+  background:linear-gradient(135deg,#fff5f8,#fff9f5);
+}
+.empty-icon{font-size:2.5rem;margin-bottom:0.75rem}
+.empty-title{font-size:1rem;font-weight:800;color:var(--pink);margin-bottom:0.3rem}
+.empty-sub{font-size:0.8rem;color:var(--muted);font-weight:600}
+
+/* ── FOOTER ── */
+.site-footer{
+  border-top:1.5px solid var(--border);
+  padding:1.5rem;text-align:center;
+  font-size:0.75rem;color:var(--muted);font-weight:700;
+  background:linear-gradient(135deg,#fff5f8,#fdf6f0);
+}
+.site-footer span{color:var(--pink)}
+
+.fade{transition:opacity 0.2s}.fading{opacity:0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .top3-grid{grid-template-columns:1fr}
+  table.dt th:nth-child(n+9),table.dt td:nth-child(n+9){display:none}
+  .hero h1{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo"><span>🍜</span> Bangkok Food Finder</div>
+  <div class="badges">
+    <div class="badge badge-mint">⚡ Apify Live</div>
+    <div class="badge badge-pink">✦ AI Powered</div>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Find the perfect table<br/>in <em>Bangkok</em> 🌸</h1>
+  <p>Real Google Maps data · AI-scored for groups of 8–12 · Just type an area</p>
+
+  <div class="search-wrap">
+    <div class="search-box">
+      <div class="search-icon">📍</div>
+      <input class="search-input" id="area-input" placeholder="Try Thonglor, Silom, Ekkamai, On Nut…"/>
+      <button class="search-btn" id="search-btn" onclick="runPipeline()">Search ✨</button>
+    </div>
+    <div class="quick-btns">
+      <span class="quick-label">Quick:</span>
+      <button class="quick-btn" onclick="setArea('Siam')">🏬 Siam</button>
+      <button class="quick-btn" onclick="setArea('Thonglor')">🍷 Thonglor</button>
+      <button class="quick-btn" onclick="setArea('Asok')">🏙 Asok</button>
+      <button class="quick-btn" onclick="setArea('Ari')">🌿 Ari</button>
+      <button class="quick-btn" onclick="setArea('Phrom Phong')">💎 Phrom Phong</button>
+    </div>
+    <!-- Buttons -->
+    <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap">
+      <button id="sheet-btn" onclick="loadFromSheet()"
+        style="display:flex;align-items:center;gap:0.45rem;padding:0.5rem 1.1rem;background:var(--card);border:1.5px solid #34a853;border-radius:100px;color:#34a853;font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:800;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 8px rgba(52,168,83,0.12)"
+        onmouseover="this.style.background='rgba(52,168,83,0.08)'" onmouseout="this.style.background='var(--card)'"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#34a853"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        Read from Google Sheet
+      </button>
+      <button id="reload-btn" onclick="reloadSheet()"
+        style="display:flex;align-items:center;gap:0.45rem;padding:0.5rem 1.1rem;background:var(--card);border:1.5px solid var(--pink-border);border-radius:100px;color:var(--pink);font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:800;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 8px rgba(244,113,154,0.12)"
+        onmouseover="this.style.background='var(--pink-dim)'" onmouseout="this.style.background='var(--card)'"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        Retry
+      </button>
+    </div>
+    <div id="sheet-status" style="text-align:center;font-size:0.75rem;font-weight:700;color:var(--muted);margin-top:0.5rem;display:none"></div>
+  </div>
+
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-steps">
+      <div class="progress-step" id="step-1">1 · Read Sheet</div>
+      <div class="progress-step" id="step-2">2 · Apify Scraping</div>
+      <div class="progress-step" id="step-3">3 · AI Scoring</div>
+      <div class="progress-step" id="step-4">4 · Rendering</div>
+    </div>
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill"></div></div>
+    <div class="progress-msg" id="progress-msg">Starting…</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="error-box" id="error-box"></div>
+  <div id="cors-warn">⚠ Opened as file:// — go to <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a> and drop this file to deploy instantly.</div>
+
+  <!-- DEFAULT BANNER (shown until real search) -->
+  <div class="default-banner" id="default-banner">
+    ✨ Showing sample data for <strong>Siam</strong> — search any area above for real live results
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-wrap">
+
+    <div class="section-head" onclick="tog('sb','st')">
+      <span class="section-tag tag-pink">Overview</span>
+      <span class="section-title" id="stats-title">Dataset Overview — Siam</span>
+      <span class="section-toggle" id="st">▲</span>
+    </div>
+    <div id="sb"><div class="stats-grid" id="stats-grid"></div></div>
+
+    <div class="section-head" onclick="tog('t3b','t3t')">
+      <span class="section-tag tag-pink">Top 3 ✨</span>
+      <span class="section-title">Scenario Recommendation</span>
+      <span class="section-toggle" id="t3t">▲</span>
+    </div>
+    <div id="t3b">
+      <div class="sc-tabs" id="sc-tabs"></div>
+      <div style="margin-bottom:1rem">
+        <div style="font-size:0.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem">✏️ Or describe your own occasion</div>
+        <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+          <input id="custom-scenario-input"
+            style="flex:1;min-width:200px;background:var(--card);border:1.5px solid var(--border2);border-radius:100px;outline:none;font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:700;color:var(--text);padding:0.55rem 1rem;transition:border-color 0.2s"
+            placeholder="e.g. birthday party, romantic dinner, impress a client…"
+            onfocus="this.style.borderColor='var(--pink)'"
+            onblur="this.style.borderColor='var(--border2)'"
+          />
+          <button onclick="runCustomScenario()"
+            style="flex-shrink:0;padding:0.55rem 1.3rem;background:linear-gradient(135deg,var(--pink),var(--peach));border:none;border-radius:100px;color:#fff;font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:800;cursor:pointer;white-space:nowrap;letter-spacing:0.04em;box-shadow:0 2px 8px rgba(244,113,154,0.3);transition:opacity 0.15s"
+            onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"
+          >Ask AI ✨</button>
+          <span id="custom-sc-thinking" style="display:none;font-size:0.78rem;color:var(--muted);font-weight:700">🤔 thinking…</span>
+        </div>
+      </div>
+      <div class="top3-grid fade" id="top3"></div>
+    </div>
+
+    <div class="section-head" onclick="tog('askb','askt')">
+      <span class="section-tag tag-mint">Smart Search 🔍</span>
+      <span class="section-title" id="ask-title">Search this dataset by keywords</span>
+      <span class="section-toggle" id="askt">▲</span>
+    </div>
+    <div id="askb">
+      <div class="ask-box">
+        <div class="ask-chips" id="ask-chips"></div>
+        <div class="ask-row">
+          <input class="ask-input" id="ask-input" placeholder="e.g. Which restaurants fit 12 people under ฿300/head?"/>
+          <button class="ask-btn" id="ask-btn" onclick="doAsk()">Ask →</button>
+        </div>
+        <div class="ask-thinking" id="ask-thinking"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span style="margin-left:0.3rem">Thinking…</span></div>
+        <div class="ask-answer" id="ask-answer">
+          <div class="ask-q" id="ask-q"></div>
+          <div class="ask-body" id="ask-body"></div>
+        </div>
+        <div class="ask-err" id="ask-err"></div>
+      </div>
+    </div>
+
+    <div class="section-head" onclick="tog('tbb','tbt')">
+      <span class="section-tag tag-amber">Dataset 📊</span>
+      <span class="section-title" id="tbl-title">Restaurant Dataset</span>
+      <span class="section-toggle" id="tbt">▲</span>
+    </div>
+    <div id="tbb">
+      <div class="filter-row">
+        <span class="fl-label">Filter:</span>
+        <select class="fl-select" id="f-cuisine" onchange="renderTable()"><option value="">All Cuisine</option></select>
+        <select class="fl-select" id="f-scenario" onchange="renderTable()">
+          <option value="">All</option>
+          <option value="group">Group 8–12</option>
+          <option value="fast">Quick Meal</option>
+          <option value="meeting">Business</option>
+          <option value="budget">Budget</option>
+        </select>
+        <select class="fl-select" id="f-risk" onchange="renderTable()">
+          <option value="">All Risk</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <div class="price-wrap">
+          <span class="fl-label">Max:</span>
+          <input type="range" class="price-range" id="f-price" min="50" max="5000" step="50" value="5000" oninput="setPriceLabel();renderTable()"/>
+          <span class="price-val" id="price-val">฿5,000</span>
+        </div>
+      </div>
+      <div class="tbl-wrap"><table class="dt">
+        <thead><tr><th>#</th><th>Restaurant</th><th>Cuisine</th><th>฿/head</th><th>Rating</th><th>Score</th><th>Conf.</th><th>Group</th><th>Speed</th><th>Noise</th><th>Risk</th><th>Hours</th><th>Note</th><th>Map</th></tr></thead>
+        <tbody id="tbl-rows"></tbody>
+      </table></div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="site-footer">
+  🍜 Bangkok Food Finder · Data: <span>Google Sheets</span> · Search: <span>Keyword Engine</span> · Built with ♥ for team dinners
+</footer>
+
+<script>
+const APIFY_TOKEN = 'apify_api_PfXmaXdGkkzyemUvO3Xancc9fkMLDS1ewRMp';
+let GEMINI_KEY = 'AQ.Ab8RN6KD5dK9CuhAzbz-aiNEWcmRQ8hQxzHNurZQ13Z9COD2nQ';
+const GEMINI_MODELS = ['gemini-2.5-flash-preview-05-20','gemini-2.0-flash','gemini-2.0-flash-lite'];
+
+// ── APPS SCRIPT CONFIG ──
+// Paste your Google Apps Script Web App URL here after deploying
+// Extensions → Apps Script → Deploy → New deployment → Web app → Anyone → Deploy
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4KwR1kYCmxFAp5jlyhHUDFjN3tDxsfRGg1Q6aHLhd8ThFlJ4r8tB-RuWMBX_UWGJokg/exec';
+
+let currentData = null;
+let currentScenario = 'Safe Bet';
+let isDefaultData = true;
+
+const SCENARIOS = {
+  'Safe Bet':         r => r.score,
+  'Budget':           r => r.budget ? r.score : -1,
+  'Quick Meal':       r => r.fast ? r.score : -1,
+  'Business Meeting': r => r.meeting ? r.score : -1,
+  'Group 8–12':       r => r.group ? r.score : -1
+};
+
+/* ── DEFAULT SIAM DATA ── */
+const DEFAULT_DATA = {
+  area:'Siam', isDefault:true,
+  stats:{count:10,avgPrice:380,avgScore:74.5,groupOk:7},
+  restaurants:[
+    {name:'Blue Elephant Siam',cuisine:'Royal Thai',price:1200,rating:4.7,reviews:3400,score:87,conf:95,hours:'11:30–22:00',group:true,fast:false,meeting:true,budget:false,risk:'low',noise:'quiet',speed:'slow',note:'Near Surasak BTS, valet parking',map:'https://maps.google.com/?q=Blue+Elephant+Bangkok',r:23,g:18,p:10,t:15,d:13,u:8,tags:['Group OK','Meeting OK','Heritage'],cautions:['Book 5+ days ahead']},
+    {name:'Koh Restaurant Siam',cuisine:'Thai Seafood',price:700,rating:4.6,reviews:2200,score:83,conf:90,hours:'11:00–22:00',group:true,fast:false,meeting:false,budget:false,risk:'low',noise:'medium',speed:'medium',note:'Siam Square — BTS Siam direct',map:'https://maps.google.com/?q=Koh+Restaurant+Siam',r:21,g:18,p:11,t:15,d:12,u:6,tags:['Group OK','Seafood'],cautions:[]},
+    {name:'Food Republic Siam Paragon',cuisine:'Multi-cuisine',price:200,rating:4.3,reviews:5800,score:78,conf:90,hours:'10:00–22:00',group:true,fast:true,meeting:false,budget:true,risk:'low',noise:'loud',speed:'fast',note:'Siam Paragon B1 — BTS direct',map:'https://maps.google.com/?q=Food+Republic+Siam+Paragon',r:18,g:19,p:13,t:15,d:11,u:2,tags:['Cheapest','No Booking','Fast'],cautions:['Loud environment']},
+    {name:'Crystal Jade Siam Paragon',cuisine:'Cantonese',price:500,rating:4.5,reviews:1600,score:77,conf:88,hours:'10:00–22:00',group:true,fast:false,meeting:true,budget:false,risk:'low',noise:'medium',speed:'medium',note:'Siam Paragon 4F — BTS direct',map:'https://maps.google.com/?q=Crystal+Jade+Siam+Paragon',r:20,g:15,p:11,t:15,d:11,u:5,tags:['Group OK','Meeting OK'],cautions:[]},
+    {name:'Coca Restaurant Siam',cuisine:'Steamboat / Suki',price:300,rating:4.4,reviews:3100,score:76,conf:88,hours:'10:30–22:00',group:true,fast:false,meeting:false,budget:true,risk:'low',noise:'medium',speed:'medium',note:'Siam Square — BTS Siam',map:'https://maps.google.com/?q=Coca+Restaurant+Siam',r:20,g:17,p:12,t:14,d:10,u:3,tags:['Group OK'],cautions:[]},
+    {name:'Nara Thai Cuisine Siam',cuisine:'Royal Thai',price:400,rating:4.4,reviews:2400,score:74,conf:88,hours:'10:00–22:00',group:true,fast:false,meeting:true,budget:false,risk:'low',noise:'medium',speed:'medium',note:'Siam Paragon 4F',map:'https://maps.google.com/?q=Nara+Thai+Siam+Paragon',r:20,g:14,p:12,t:15,d:11,u:2,tags:['Group OK','Meeting OK'],cautions:[]},
+    {name:'Greyhound Café Siam',cuisine:'Modern Thai',price:280,rating:4.3,reviews:1800,score:72,conf:85,hours:'10:00–22:00',group:false,fast:false,meeting:true,budget:true,risk:'low',noise:'medium',speed:'medium',note:'Siam Center 2F',map:'https://maps.google.com/?q=Greyhound+Cafe+Siam',r:19,g:12,p:12,t:15,d:10,u:4,tags:['Meeting OK','Budget'],cautions:['Small tables only']},
+    {name:'After You Dessert Siam',cuisine:'Dessert / Café',price:180,rating:4.4,reviews:4200,score:69,conf:88,hours:'10:00–22:00',group:false,fast:false,meeting:false,budget:true,risk:'low',noise:'medium',speed:'medium',note:'Siam Square One',map:'https://maps.google.com/?q=After+You+Siam',r:20,g:10,p:13,t:15,d:8,u:3,tags:['Budget'],cautions:['Not a full meal venue']},
+    {name:'Gyu-Kaku Siam Paragon',cuisine:'Japanese BBQ',price:700,rating:4.1,reviews:900,score:58,conf:78,hours:'11:00–22:00',group:true,fast:false,meeting:false,budget:false,risk:'medium',noise:'medium',speed:'slow',note:'Siam Paragon 4F',map:'https://maps.google.com/?q=Gyu-Kaku+Siam+Paragon',r:17,g:13,p:8,t:15,d:7,u:5,tags:['Group OK'],cautions:['High price vs score']},
+    {name:'Pizza Hut Siam MBK',cuisine:'Pizza / Western',price:250,rating:4.0,reviews:2800,score:64,conf:80,hours:'10:00–22:00',group:true,fast:false,meeting:false,budget:true,risk:'low',noise:'loud',speed:'medium',note:'MBK Center 5F',map:'https://maps.google.com/?q=Pizza+Hut+MBK',r:17,g:13,p:12,t:14,d:7,u:1,tags:['Budget','Group OK'],cautions:[]}
+  ]
+};
+
+function setArea(a) {
+  document.getElementById('area-input').value = a;
+  // highlight active quick btn
+  document.querySelectorAll('.quick-btn').forEach(b => b.classList.toggle('active', b.textContent.includes(a)));
+  runPipeline();
+}
+
+document.getElementById('area-input').addEventListener('keydown', e => { if (e.key === 'Enter') runPipeline(); });
+
+/* ══════════════════════════════════════════════════════
+   N8N CONFIG — paste your two Production Webhook URLs here
+   ══════════════════════════════════════════════════════
+   HOW TO GET THESE:
+   1. In n8n, build Workflow A (Search):
+        Webhook (POST /search) → Apify actor run → wait → save to Google Sheet → Respond to Webhook {status:"done",count:N}
+   2. Build Workflow B (Read Sheet):
+        Webhook (GET /read-sheet) → Google Sheets "Get Rows" → Respond to Webhook (return rows as JSON array)
+   3. Activate both workflows, copy each Production URL below.
+*/
+const N8N_SEARCH_URL    = 'https://n8n-external.exservice.io/webhook/search';
+const N8N_READ_URL      = 'https://n8n-external.exservice.io/webhook/read-sheet';
+
+// How many seconds to wait after n8n confirms scraping is done before reading the sheet
+const READ_DELAY_SEC = 3;
+
+function setSheetStatus(msg, color) {
+  const el = document.getElementById('sheet-status');
+  el.style.display = msg ? 'block' : 'none';
+  el.style.color = color || 'var(--muted)';
+  el.textContent = msg;
+}
+
+/* ── called by "Read from Google Sheet" button ── */
+async function loadFromSheet() {
+  const area = document.getElementById('area-input').value.trim() || 'Bangkok';
+  const btn = document.getElementById('sheet-btn');
+  btn.disabled = true;
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="#34a853"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Reading…`;
+  setSheetStatus('📊 Reading Google Sheet directly…', 'var(--muted)');
+  try {
+    const raw = await readGoogleSheetDirect(area);
+    await processRawData(raw, area);
+  } catch(e) {
+    setSheetStatus('⚠ ' + e.message, 'var(--red)');
+    showError(e.message);
+    setLoading(false);
+  }
+  btn.disabled = false;
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="#34a853"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Read from Google Sheet`;
+}
+
+/* ── called by "Retry" button ── */
+async function reloadSheet() {
+  const btn = document.getElementById('reload-btn');
+  btn.disabled = true;
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg> Retrying…`;
+  showError('');
+  setSheetStatus('🔄 Retrying…', 'var(--muted)');
+  await loadFromSheet();
+  btn.disabled = false;
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg> Retry`;
+}
+
+/* ── reads Google Sheet via Apps Script JSON web app ── */
+async function readGoogleSheetDirect(area) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    throw new Error('APPS_SCRIPT_URL not set.');
+  }
+
+  let raw = null;
+
+  // Apps Script redirects — try with redirect:follow first, then CORS proxies
+  const attempts = [
+    () => fetch(`https://corsproxy.io/?${encodeURIComponent(APPS_SCRIPT_URL)}`),
+    () => fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(APPS_SCRIPT_URL)}`),
+    () => fetch(`https://thingproxy.freeboard.io/fetch/${APPS_SCRIPT_URL}`),
+    () => fetch(APPS_SCRIPT_URL, { redirect: 'follow' }),
+  ];
+
+  let lastErr = '';
+  for (const attempt of attempts) {
+    try {
+      const res = await attempt();
+      if (res.ok) {
+        const text = await res.text();
+        // Strip any HTML wrapping (allorigins sometimes wraps)
+        const jsonText = text.trim().startsWith('[') || text.trim().startsWith('{')
+          ? text
+          : text.replace(/^[^[{]*/, '').replace(/[^}\]]*$/, '');
+        raw = JSON.parse(jsonText);
+        if (Array.isArray(raw) && raw.length >= 2) break;
+        raw = null;
+      }
+    } catch(e) {
+      lastErr = e.message;
+    }
+  }
+
+  if (!raw || !Array.isArray(raw) || raw.length < 2) {
+    throw new Error(`Could not load data from Apps Script. Check that the deployment access is set to "Anyone". (${lastErr})`);
+  }
+
+  const headers = raw[0].map(h => String(h).trim().toLowerCase().replace(/\s+/g,'_'));
+  const data = raw.slice(1)
+    .filter(r => r.some(c => String(c).trim()))
+    .map(r => {
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = String(r[i] ?? '').trim(); });
+      return obj;
+    });
+
+  return normaliseRows(data);
+}
+
+/* ── minimal CSV parser (handles quoted fields with commas) ── */
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.split(/\r?\n/);
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+        else { inQ = !inQ; }
+      } else if (ch === ',' && !inQ) {
+        cols.push(cur); cur = '';
+      } else {
+        cur += ch;
+      }
+    }
+    cols.push(cur);
+    rows.push(cols);
+  }
+  return rows;
+}
+
+/* ── kept for backwards compat (no longer used) ── */
+async function callReadSheet(area) { return readGoogleSheetDirect(area); }
+
+/* ── normalises raw sheet rows to a consistent shape ── */
+function normaliseRows(rows) {
+  if (!rows.length) throw new Error('Google Sheet is empty — run a Search first to populate it.');
+  const seen = new Set();
+  return rows
+    .filter(r => r.title || r.name)
+    .filter(r => {
+      const t = (r.title || r.name || '').trim();
+      if (seen.has(t)) return false; seen.add(t); return true;
+    })
+    .map(r => ({
+      title:        r.title        || r.name         || '',
+      subTitle:     r.subtitle     || r.description  || '',
+      price:        r.price        || '',
+      categoryName: r.categoryname || r.category     || 'Restaurant',
+      address:      r.address      || '',
+      neighborhood: r.neighborhood || r.street       || '',
+      city:         r.city         || 'Bangkok',
+      totalScore:   parseFloat(r.totalscore || r.rating || '') || null,
+      reviewsCount: parseInt(r.reviewscount || r.reviews || '') || null,
+      openingHours: []   // not available as flat column in this export
+    }));
+}
+
+/* ── converts raw sheet rows directly into scored restaurant objects — no AI ── */
+async function processRawData(raw, area) {
+  if (!raw || !raw.length) throw new Error('No restaurant data to process.');
+  document.getElementById('default-banner').style.display = 'none';
+  setLoading(true);
+  setStep(3, 80, `Processing ${raw.length} restaurants…`);
+  setSheetStatus(`✅ Got ${raw.length} restaurants — building dashboard…`, '#34a853');
+
+  const restaurants = raw.map(r => {
+    const name         = r.title || '';
+    const cuisine      = r.categoryname || r.categoryName || 'Restaurant';
+    const rating       = parseFloat(r.totalscore || r.totalScore || 0) || 0;
+    const reviews      = parseInt(r.reviewscount || r.reviewsCount || 0) || 0;
+    const address      = r.address || '';
+    const mapUrl       = r.url || `https://maps.google.com/?q=${encodeURIComponent(name + ' Bangkok')}`;
+    const hours        = (r.openinghours || r.openingHours || '').toString() || '—';
+
+    // price: sheet stores "$","$$" etc or a number
+    const priceRaw = (r.price || '').toString();
+    const price = priceRaw === '$$$$' ? 1200 : priceRaw === '$$$' ? 600 : priceRaw === '$$' ? 300 : priceRaw === '$' ? 150 : (parseFloat(priceRaw) || 300);
+
+    // simple scoring — no AI needed
+    const rScore = Math.min(25, Math.round((rating / 5) * 25));
+    const revScore = Math.min(10, Math.round(Math.log10(reviews + 1) * 5));
+    const pScore = price <= 200 ? 15 : price <= 400 ? 12 : price <= 700 ? 9 : 6;
+    const score = Math.min(100, rScore + revScore + pScore + 20); // +20 base
+
+    const budget  = price <= 300;
+    const group   = reviews > 500;
+    const fast    = cuisine.toLowerCase().includes('fast') || price < 200;
+    const meeting = rating >= 4.2 && price >= 300;
+    const risk    = rating >= 4.3 ? 'low' : rating >= 3.8 ? 'medium' : 'high';
+    const noise   = fast ? 'loud' : meeting ? 'quiet' : 'medium';
+    const speed   = fast ? 'fast' : price > 600 ? 'slow' : 'medium';
+
+    return {
+      name, cuisine, price, rating, reviews, score,
+      conf: Math.min(95, 60 + Math.round(Math.log10(reviews + 1) * 8)),
+      hours, group, fast, meeting, budget, risk, noise, speed,
+      note: r.subtitle || r.subTitle || address || cuisine + ' in ' + (r.neighborhood || area),
+      map: mapUrl,
+      r: rScore, g: group ? 16 : 8, p: pScore, t: 12, d: 8, u: 4,
+      tags: [
+        ...(group   ? ['👥 Group OK'] : []),
+        ...(budget  ? ['💰 Budget']   : []),
+        ...(meeting ? ['💼 Meeting']  : []),
+        ...(fast    ? ['⚡ Fast']     : []),
+      ],
+      cautions: rating < 3.8 ? ['Low rating — verify before booking'] : []
+    };
+  }).sort((a, b) => b.score - a.score);
+
+  const scored = {
+    area,
+    restaurants,
+    stats: {
+      count:    restaurants.length,
+      avgPrice: Math.round(restaurants.reduce((s, r) => s + r.price, 0) / restaurants.length),
+      avgScore: Math.round(restaurants.reduce((s, r) => s + r.score, 0) / restaurants.length * 10) / 10,
+      groupOk:  restaurants.filter(r => r.group).length
+    }
+  };
+
+  setStep(4, 95, 'Rendering dashboard…');
+  currentData = scored;
+  isDefaultData = false;
+  renderAll(scored);
+  setLoading(false);
+  setSheetStatus(`✅ Loaded ${restaurants.length} restaurants from Google Sheet`, '#34a853');
+}
+
+function saveWebhook() {}
+
+async function scoreSheetData(raw, area) {
+  const summary = raw.map(p => {
+    const priceStr = p.price || '';
+    const priceNum = priceStr.includes('200') ? 200 : priceStr.includes('400') ? 400 : priceStr.includes('600') ? 600 : priceStr.includes('1000') ? 1000 : 300;
+    return `Name:${p.title} | Sub:${p.subTitle} | Cat:${p.categoryName} | Price:${priceStr}(~฿${priceNum}) | Address:${p.address} | Area:${p.neighborhood||area}`;
+  }).join('\n');
+
+  const prompt = `Score each restaurant for a team dinner of 8-12 people in ${area}, Bangkok.
+100-point model: r(0-25 rating) + g(0-20 group) + p(0-15 price) + t(0-15 travel) + d(0-15 data) + u(0-10 unique). score=r+g+p+t+d+u.
+Note: No real ratings available — estimate from category/price/name. Set conf 55-75 since data is limited.
+Return ONLY valid JSON no markdown:
+{"area":"${area}","restaurants":[{"name":string,"cuisine":string,"price":number,"rating":number,"reviews":number,"score":number,"conf":number,"hours":string,"group":boolean,"fast":boolean,"meeting":boolean,"budget":boolean,"risk":"low"|"medium"|"high","noise":"quiet"|"medium"|"loud","speed":"fast"|"medium"|"slow","note":string,"map":string,"r":number,"g":number,"p":number,"t":number,"d":number,"u":number,"tags":string[],"cautions":string[]}]}
+DATA:\n${summary}`;
+
+  let text = '';
+  for (const model of GEMINI_MODELS) {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GEMINI_KEY}` },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 4000 } })
+    });
+    const data = await res.json();
+    if (res.ok) { text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''; break; }
+    if (res.status !== 429 && !data.error?.message?.includes('quota')) throw new Error(`Gemini error: ${data.error?.message}`);
+  }
+  if (!text) throw new Error('Gemini quota exceeded. Try again in a few minutes.');
+  const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+  const rests = parsed.restaurants;
+  parsed.stats = {
+    count: rests.length,
+    avgPrice: Math.round(rests.reduce((s,r) => s+r.price, 0) / rests.length),
+    avgScore: Math.round(rests.reduce((s,r) => s+r.score, 0) / rests.length * 10) / 10,
+    groupOk: rests.filter(r => r.group).length
+  };
+  return parsed;
+}
+
+/* ── PIPELINE — Search button → n8n read-sheet → score → render ── */
+async function runPipeline() {
+  const area = document.getElementById('area-input').value.trim();
+  if (!area) { showError('Please enter an area name first.'); return; }
+
+  if (!N8N_READ_URL || N8N_READ_URL === 'YOUR_N8N_READ_SHEET_WEBHOOK_URL') {
+    showError('N8N_READ_URL not set.');
+    return;
+  }
+
+  setLoading(true);
+  showError('');
+  setSheetStatus('');
+  isDefaultData = false;
+  document.getElementById('default-banner').style.display = 'none';
+  currentScenario = 'Safe Bet';
+
+  try {
+    // Step 1: Trigger n8n search webhook using no-cors (fire and forget)
+    if (N8N_SEARCH_URL && N8N_SEARCH_URL !== 'YOUR_N8N_SEARCH_WEBHOOK_URL') {
+      setStep(1, 10, `Triggering n8n scrape for "${area}"…`);
+      try {
+        // Use no-cors to avoid CORS error — we don't need the response
+        await fetch(`${N8N_SEARCH_URL}?area=${encodeURIComponent(area)}`, {
+          method: 'GET',
+          mode: 'no-cors'
+        });
+      } catch(e) {
+        // Ignore — no-cors may still throw but n8n received the call
+      }
+    }
+
+    // Step 2: Wait for Apify to scrape (n8n Wait node handles this)
+    setStep(2, 30, `Scraping Google Maps for "${area}"… (this takes ~1–2 min)`);
+    const waitStart = Date.now();
+    let dots = 0;
+    await new Promise(resolve => {
+      const interval = setInterval(() => {
+        dots = (dots + 1) % 4;
+        const elapsed = Math.round((Date.now() - waitStart) / 1000);
+        const pct = Math.min(30 + Math.round(elapsed / 1.2), 65);
+        setStep(2, pct, `Scraping Google Maps${'.'.repeat(dots + 1)} (${elapsed}s)`);
+        if (elapsed >= 90) { clearInterval(interval); resolve(); }
+      }, 2000);
+      // Also resolve after 90 seconds max wait
+      setTimeout(() => { clearInterval(interval); resolve(); }, 90000);
+    });
+
+    // Step 3: Read results from sheet
+    setStep(3, 70, 'Reading results from Google Sheet…');
+    const raw = await callReadSheet(area);
+
+    // Step 4: Score + render
+    await processRawData(raw, area);
+
+  } catch(e) {
+    setLoading(false);
+    showError(e.message);
+  }
+}
+
+/* ── APIFY ── */
+async function startApifyRun(area) {
+  let res;
+  try {
+    res = await fetch(`https://api.apify.com/v2/acts/compass~crawler-google-places/runs?token=${APIFY_TOKEN}`, {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${GEMINI_KEY}`},
+      body:JSON.stringify({searchStringsArray:[`restaurants near ${area} Bangkok`],maxCrawledPlacesPerSearch:20,language:'en',maxReviews:0,exportPlaceUrls:true})
+    });
+  } catch(e) { throw new Error('Network error — CORS blocks API from file://. Deploy to Vercel/Netlify first.'); }
+  if (!res.ok) { const d=await res.json().catch(()=>({})); throw new Error(`Apify error (${res.status}): ${d.error?.message||'Check token'}`); }
+  return (await res.json()).data.id;
+}
+
+async function pollUntilDone(runId) {
+  const start=Date.now(); let dots=0;
+  while(Date.now()-start<180000) {
+    await sleep(5000);
+    const res=await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`);
+    if(!res.ok) throw new Error(`Poll failed: ${res.status}`);
+    const {data}=await res.json();
+    const status=data?.status||'UNKNOWN';
+    const elapsed=Math.round((Date.now()-start)/1000);
+    dots=(dots+1)%4;
+    setStep(2,Math.min(30+Math.round(elapsed/1.2),65),`Scraping${'.'.repeat(dots+1)} (${elapsed}s) — ${status}`);
+    if(status==='SUCCEEDED') return;
+    if(['FAILED','ABORTED','TIMED-OUT'].includes(status)) throw new Error(`Apify run ${status}`);
+  }
+  throw new Error('Apify scrape timed out after 3 minutes');
+}
+
+async function fetchResults(runId) {
+  const res=await fetch(`https://api.apify.com/v2/actor-runs/${runId}/dataset/items?token=${APIFY_TOKEN}&limit=25&fields=title,totalScore,reviewsCount,price,address,categoryName,openingHours,url`);
+  if(!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+  const data=await res.json();
+  if(!Array.isArray(data)) throw new Error('Unexpected Apify response format');
+  return data;
+}
+
+/* ── GEMINI SCORING ── */
+async function scoreWithGemini(raw, area) {
+  const summary = raw.map(p => {
+    const hours=(p.openingHours||[]).map(h=>`${h.day}:${h.hours}`).join('; ')||'unknown';
+    const price=p.price||'';
+    const priceNum=price==='$'?120:price==='$$'?280:price==='$$$'?550:price==='$$$$'?1100:300;
+    return `Name:${p.title||'?'} | Cat:${p.categoryName||'Restaurant'} | Rating:${p.totalScore||'N/A'} | Reviews:${p.reviewsCount||0} | Price:${price}(~฿${priceNum}) | Address:${p.address||''} | Hours:${hours} | URL:${p.url||''}`;
+  }).join('\n');
+
+  const prompt = `Score each restaurant for a team dinner of 8-12 people in ${area}, Bangkok.
+100-point model: r(0-25 rating/reviews) + g(0-20 group suitability) + p(0-15 price) + t(0-15 travel/BTS) + d(0-15 data completeness) + u(0-10 uniqueness). score=r+g+p+t+d+u exactly.
+Return ONLY valid JSON no markdown:
+{"area":"${area}","restaurants":[{"name":string,"cuisine":string,"price":number,"rating":number,"reviews":number,"score":number,"conf":number(50-99),"hours":string,"group":boolean,"fast":boolean,"meeting":boolean,"budget":boolean(under300),"risk":"low"|"medium"|"high","noise":"quiet"|"medium"|"loud","speed":"fast"|"medium"|"slow","note":string,"map":string,"r":number,"g":number,"p":number,"t":number,"d":number,"u":number,"tags":string[],"cautions":string[]}]}
+DATA:\n${summary}`;
+
+  let text='';
+  for(const model of GEMINI_MODELS){
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{
+      method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${GEMINI_KEY}`},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.2,maxOutputTokens:4000}})
+    });
+    const data=await res.json();
+    if(res.ok){text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';break;}
+    if(res.status!==429&&!data.error?.message?.includes('quota')) throw new Error(`Gemini error (${model}): ${data.error?.message||res.status}`);
+  }
+  if(!text) throw new Error('All Gemini models hit quota. Try again in a few minutes.');
+  const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
+  const rests=parsed.restaurants;
+  parsed.stats={
+    count:rests.length,
+    avgPrice:Math.round(rests.reduce((s,r)=>s+r.price,0)/rests.length),
+    avgScore:Math.round(rests.reduce((s,r)=>s+r.score,0)/rests.length*10)/10,
+    groupOk:rests.filter(r=>r.group).length
+  };
+  return parsed;
+}
+
+/* ── RENDER ── */
+function renderAll(d) {
+  document.getElementById('stats-title').textContent=`Dataset Overview — ${d.area}`;
+  document.getElementById('tbl-title').textContent=`Restaurant Dataset — ${d.restaurants.length} restaurants`;
+  document.getElementById('ask-title').textContent=`Ask about restaurants in ${d.area}`;
+  const s=d.stats;
+  document.getElementById('stats-grid').innerHTML=`
+    <div class="stat-card"><div class="stat-num">${s.count}</div><div class="stat-label">Restaurants</div><div class="stat-sub">from Google Maps</div></div>
+    <div class="stat-card"><div class="stat-num">฿${s.avgPrice}</div><div class="stat-label">Avg / Head</div><div class="stat-sub">estimated</div></div>
+    <div class="stat-card"><div class="stat-num">${s.avgScore}</div><div class="stat-label">Avg Score</div><div class="stat-sub">/ 100 pts</div></div>
+    <div class="stat-card"><div class="stat-num">${s.groupOk}</div><div class="stat-label">Group OK</div><div class="stat-sub">seats 8–12 pax</div></div>`;
+  document.getElementById('sc-tabs').innerHTML=Object.keys(SCENARIOS).map(sc=>
+    `<button class="sc-tab${sc===currentScenario?' active':''}" onclick="setScenario('${sc}')">${sc}</button>`).join('');
+  renderTop3();refreshCuisineFilter();renderTable();
+  document.getElementById('ask-chips').innerHTML=[
+    `Which fit 12 people under ฿300/head?`,
+    `Best for a quiet business meeting?`,
+    `Highest rated here?`,
+    `Fastest option under ฿200?`,
+    `Low risk and group-friendly?`
+  ].map(q=>`<button class="ask-chip" onclick="fillAsk('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
+  document.getElementById('ask-thinking').classList.remove('active');
+  document.getElementById('ask-answer').classList.remove('active');
+  document.getElementById('ask-err').classList.remove('active');
+  document.getElementById('ask-input').value='';
+}
+
+/* ── CUSTOM SCENARIO ── */
+async function runCustomScenario() {
+  const q = document.getElementById('custom-scenario-input').value.trim();
+  if (!q || !currentData) return;
+  const thinking = document.getElementById('custom-sc-thinking');
+  thinking.style.display = 'block';
+  document.querySelectorAll('.sc-tab').forEach(b => b.classList.remove('active'));
+  const dataset = currentData.restaurants.map(r =>
+    `${r.name} | ${r.cuisine} | ฿${r.price}/head | ★${r.rating} (${r.reviews} reviews) | Score ${r.score}/100 | Group:${r.group} | Fast:${r.fast} | Meeting:${r.meeting} | Budget:${r.budget} | Risk:${r.risk} | Noise:${r.noise} | Note:${r.note}`
+  ).join('\n');
+  const prompt = `A user wants restaurants for: "${q}". Pick TOP 3 best-matching from the list for this occasion. Return ONLY a JSON array of 3 restaurant names, no markdown: ["name1","name2","name3"]\nRESTAURANTS:\n${dataset}`;
+  try {
+    let text = '';
+    for (const model of GEMINI_MODELS) {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${GEMINI_KEY}`},
+        body: JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.3,maxOutputTokens:200} })
+      });
+      const data = await res.json();
+      if (res.ok) { text = data.candidates?.[0]?.content?.parts?.[0]?.text||''; break; }
+      if (res.status!==429 && !data.error?.message?.includes('quota')) throw new Error(data.error?.message);
+    }
+    const names = JSON.parse(text.replace(/```json|```/g,'').trim());
+    const top3 = names.map(name =>
+      currentData.restaurants.find(r => r.name.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(r.name.toLowerCase()))
+    ).filter(Boolean).slice(0,3);
+    thinking.style.display = 'none';
+    if (!top3.length) { showError('Could not match restaurants. Try a different description.'); return; }
+    const g = document.getElementById('top3');
+    g.classList.add('fading');
+    setTimeout(() => {
+      g.innerHTML = top3.map((r,i) => {
+        const sc = r.score>=80?'var(--mint)':r.score>=70?'var(--amber)':'var(--muted)';
+        const bars = [{label:'⭐ Rating',val:r.r,max:25},{label:'👥 Group Fit',val:r.g,max:20},{label:'💰 Value',val:r.p,max:15},{label:'🚇 Travel',val:r.t,max:15}].map(x=>{
+          const pct=Math.round(x.val/x.max*100);const color=pct>=80?'var(--mint)':pct>=60?'var(--amber)':'var(--muted)';
+          return `<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.35rem"><span style="font-size:0.7rem;font-weight:700;color:var(--text2);width:80px;flex-shrink:0">${x.label}</span><div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${color};border-radius:3px"></div></div><span style="font-size:0.7rem;font-weight:800;color:${color};width:30px;text-align:right">${pct}%</span></div>`;
+        }).join('');
+        return `<div class="rec-card${i===0?' rank1':''}">
+          <div class="rec-head">
+            <div class="rank-pin ${['rp1','rp2','rp3'][i]}">#${i+1}</div>
+            <div class="rec-name">${r.name}</div>
+            <div class="rec-sub">${r.cuisine} · ฿${r.price}/head</div>
+            <div style="margin-top:0.4rem;font-size:0.72rem;color:var(--pink);font-weight:700;background:var(--pink-dim);padding:0.2rem 0.6rem;border-radius:100px;display:inline-block">✨ ${q}</div>
+            <div class="rec-score-row" style="margin-top:0.5rem"><div class="rec-score" style="color:${sc}">${r.score}</div><div class="rec-score-max">/100</div><div class="rec-rating">⭐${r.rating} · ${(r.reviews||0).toLocaleString()} reviews</div></div>
+          </div>
+          <div class="rec-body">
+            <div class="rec-tags">${(r.tags||[]).map(t=>`<span class="rtag">${t}</span>`).join('')}</div>
+            <div style="margin-bottom:0.75rem">${bars}</div>
+            <div class="rec-note">${r.note}</div>
+            ${(r.cautions||[]).map(c=>`<div class="rec-warn">⚠ ${c}</div>`).join('')}
+          </div>
+          <a class="rec-link" href="${r.map}" target="_blank">View on Google Maps ↗</a>
+        </div>`;
+      }).join('');
+      g.classList.remove('fading');
+    }, 180);
+  } catch(e) {
+    thinking.style.display='none';
+    showError('Custom scenario error: '+e.message);
+  }
+}
+
+/* ── TOP 3 ── */
+function setScenario(s){
+  currentScenario=s;
+  document.querySelectorAll('.sc-tab').forEach(b=>b.classList.toggle('active',b.textContent===s));
+  const g=document.getElementById('top3');
+  g.classList.add('fading');setTimeout(()=>{renderTop3();g.classList.remove('fading');},180);
+}
+
+function renderTop3(){
+  if(!currentData)return;
+  const fn=SCENARIOS[currentScenario];
+  const sorted=[...currentData.restaurants].sort((a,b)=>fn(b)-fn(a)).filter(r=>fn(r)>0).slice(0,3);
+  const g=document.getElementById('top3');
+  if(!sorted.length){g.innerHTML='<div style="padding:1.5rem;color:var(--muted);text-align:center;font-weight:700">No restaurants match this scenario.</div>';return;}
+  g.innerHTML=sorted.map((r,i)=>{
+    const sc=r.score>=80?'var(--mint)':r.score>=70?'var(--amber)':'var(--muted)';
+    return `<div class="rec-card${i===0?' rank1':''}">
+      <div class="rec-head">
+        <div class="rank-pin ${['rp1','rp2','rp3'][i]}">#${i+1}</div>
+        <div class="rec-name">${r.name}</div>
+        <div class="rec-sub">${r.cuisine} · ฿${r.price}/head</div>
+        <div class="rec-score-row">
+          <div class="rec-score" style="color:${sc}">${r.score}</div>
+          <div class="rec-score-max">/100</div>
+          <div class="rec-rating">⭐${r.rating} · ${(r.reviews||0).toLocaleString()} reviews</div>
+        </div>
+      </div>
+      <div class="rec-body">
+        <div class="rec-tags">${(r.tags||[]).map(t=>`<span class="rtag">${t}</span>`).join('')}</div>
+        <div style="margin-bottom:0.75rem">
+          ${[
+            {label:'⭐ Rating', val:r.r, max:25},
+            {label:'👥 Group Fit', val:r.g, max:20},
+            {label:'💰 Value', val:r.p, max:15},
+            {label:'🚇 Travel', val:r.t, max:15},
+          ].map(x => {
+            const pct = Math.round(x.val/x.max*100);
+            const color = pct>=80?'var(--mint)':pct>=60?'var(--amber)':'var(--muted)';
+            return `<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.35rem">
+              <span style="font-size:0.7rem;font-weight:700;color:var(--text2);width:80px;flex-shrink:0">${x.label}</span>
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+                <div style="width:${pct}%;height:100%;background:${color};border-radius:3px"></div>
+              </div>
+              <span style="font-size:0.7rem;font-weight:800;color:${color};width:30px;text-align:right">${pct}%</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="rec-note">${r.note}</div>
+        ${(r.cautions||[]).map(c=>`<div class="rec-warn">⚠ ${c}</div>`).join('')}
+      </div>
+      <a class="rec-link" href="${r.map}" target="_blank">View on Google Maps ↗</a>
+    </div>`;
+  }).join('');
+}
+
+/* ── AI ASK — keyword search over currentData, no external API ── */
+function fillAsk(q){document.getElementById('ask-input').value=q;}
+document.getElementById('ask-input').addEventListener('keydown',e=>{if(e.key==='Enter')doAsk();});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.activeElement.id === 'custom-scenario-input') runCustomScenario();
+});
+
+function doAsk(){
+  const q = document.getElementById('ask-input').value.trim();
+  if (!q || !currentData) return;
+  document.getElementById('ask-answer').classList.remove('active');
+  document.getElementById('ask-err').classList.remove('active');
+
+  try {
+    const answer = searchDataset(q, currentData.restaurants, currentData.area);
+    document.getElementById('ask-q').textContent = `Q: ${q}`;
+    document.getElementById('ask-body').innerHTML = answer;
+    document.getElementById('ask-answer').classList.add('active');
+  } catch(e) {
+    document.getElementById('ask-err').textContent = `Error: ${e.message}`;
+    document.getElementById('ask-err').classList.add('active');
+  }
+}
+
+/* ── keyword-based search engine ── */
+function searchDataset(q, restaurants, area) {
+  const ql = q.toLowerCase();
+
+  // ── helpers ──────────────────────────────────────────────────────────
+  const mention = (...words) => words.some(w => ql.includes(w));
+  const priceMatch = ql.match(/฿?\s*(\d{3,5})/);
+  const maxPrice = priceMatch ? parseInt(priceMatch[1]) : null;
+
+  // parse "N people" or group-size cues
+  const groupMatch = ql.match(/(\d+)\s*(people|person|pax|guests?|heads?)/);
+  const groupSize = groupMatch ? parseInt(groupMatch[1]) : null;
+  const wantsGroup = groupSize >= 8 || mention('group','team','staff','colleagues','large party','big group','8','9','10','11','12');
+
+  // cuisine keywords → partial match against r.cuisine
+  const cuisineWords = ['thai','japanese','italian','chinese','korean','indian','western','seafood','bbq','sushi','ramen','pizza','burger','vegetarian','vegan','cantonese','french','mexican','fusion','dessert','café','cafe','noodle','steamboat','suki'];
+  const wantedCuisine = cuisineWords.find(c => ql.includes(c));
+
+  // scenario cues
+  const wantsBudget   = mention('cheap','budget','affordable','inexpensive','low cost','under','below','less than');
+  const wantsFast     = mention('fast','quick','quick meal','speedy','no wait','hurry','rush');
+  const wantsMeeting  = mention('meeting','business','client','professional','formal','quiet meeting');
+  const wantsQuiet    = mention('quiet','calm','peaceful','serene','relaxed');
+  const wantsHighRating = mention('best','top','highest rated','most popular','recommended','favourite','favorite');
+  const wantsLowRisk  = mention('safe','reliable','low risk','trustworthy','consistent');
+
+  // ── filter + score ───────────────────────────────────────────────────
+  let pool = restaurants.filter(r => {
+    if (wantsGroup && !r.group) return false;
+    if (maxPrice && r.price > maxPrice) return false;
+    if (wantsBudget && r.price > 400) return false;
+    if (wantsFast && !r.fast) return false;
+    if (wantsMeeting && !r.meeting) return false;
+    if (wantsCuisine && !r.cuisine.toLowerCase().includes(wantedCuisine)) return false;
+    return true;
+  });
+
+  // if nothing passed strict filter, loosen and note it
+  let loosened = false;
+  if (!pool.length) {
+    loosened = true;
+    pool = [...restaurants];
+  }
+
+  // boost score
+  pool = pool.map(r => {
+    let boost = r.score;
+    if (wantsHighRating)  boost += r.rating * 2;
+    if (wantsQuiet && r.noise === 'quiet')   boost += 10;
+    if (wantsLowRisk && r.risk === 'low')    boost += 8;
+    if (wantsBudget && r.budget)             boost += 12;
+    if (wantsFast && r.fast)                 boost += 10;
+    if (wantsMeeting && r.meeting)           boost += 10;
+    if (wantedCuisine && r.cuisine.toLowerCase().includes(wantedCuisine)) boost += 15;
+    return { ...r, _boost: boost };
+  }).sort((a, b) => b._boost - a._boost);
+
+  const top = pool.slice(0, 5);
+
+  // ── build answer ─────────────────────────────────────────────────────
+  const lines = [];
+
+  // context sentence
+  const filters = [];
+  if (wantsGroup) filters.push('group-friendly (8–12 pax)');
+  if (wantedCuisine) filters.push(wantedCuisine + ' cuisine');
+  if (maxPrice) filters.push(`under ฿${maxPrice}/head`);
+  if (wantsBudget && !maxPrice) filters.push('budget-friendly');
+  if (wantsFast)    filters.push('quick service');
+  if (wantsMeeting) filters.push('business-suitable');
+  if (wantsQuiet)   filters.push('quiet');
+  if (wantsLowRisk) filters.push('low-risk');
+
+  if (loosened) {
+    lines.push(`<p>No restaurants exactly match all your criteria, so here are the top picks from <strong>${area}</strong> overall:</p>`);
+  } else {
+    const desc = filters.length ? filters.join(', ') : 'your query';
+    lines.push(`<p>Found <strong>${pool.length}</strong> restaurant${pool.length!==1?'s':''} in <strong>${area}</strong> matching <em>${desc}</em>. Top picks:</p>`);
+  }
+
+  // result list
+  lines.push('<ul>');
+  for (const r of top) {
+    const tags = [];
+    if (r.group)   tags.push('👥 Group OK');
+    if (r.fast)    tags.push('⚡ Fast');
+    if (r.meeting) tags.push('💼 Meeting OK');
+    if (r.budget)  tags.push('💰 Budget');
+    if (r.risk === 'low') tags.push('✅ Low Risk');
+    const tagStr = tags.length ? ` · ${tags.join(' · ')}` : '';
+    lines.push(`<li><strong>${r.name}</strong> — ${r.cuisine}, ฿${r.price}/head, ⭐${r.rating}${tagStr}<br/><span style="font-size:0.8rem;color:var(--muted)">${r.note}</span></li>`);
+  }
+  lines.push('</ul>');
+
+  // recommendation
+  if (top.length) {
+    const best = top[0];
+    lines.push(`<p><strong>💡 Recommendation:</strong> <strong>${best.name}</strong> (Score ${best.score}/100) is the top pick — ฿${best.price}/head, ${best.cuisine}, ⭐${best.rating}. ${best.note}</p>`);
+    if ((best.cautions||[]).length) {
+      lines.push(`<p style="font-size:0.8rem;color:var(--red)">⚠ Note: ${best.cautions.join('; ')}</p>`);
+    }
+  }
+
+  // no results fallback
+  if (!top.length) {
+    lines.push('<p>No restaurants found in the current dataset. Try loading data for a specific area first.</p>');
+  }
+
+  return lines.join('');
+}
+
+function fmtAnswer(text){
+  const lines=text.split('\n');let html='',inUl=false;
+  for(const raw of lines){
+    const line=raw.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+    if(/^[-•*]\s/.test(raw.trimStart())){if(!inUl){html+='<ul>';inUl=true;}html+=`<li>${line.replace(/^[-•*]\s+/,'')}</li>`;}
+    else{if(inUl){html+='</ul>';inUl=false;}if(line.trim())html+=`<p>${line}</p>`;}
+  }
+  if(inUl)html+='</ul>';return html;
+}
+
+/* ── TABLE ── */
+function refreshCuisineFilter(){
+  const sel=document.getElementById('f-cuisine'),cur=sel.value;
+  const c=[...new Set(currentData.restaurants.map(r=>r.cuisine))].sort();
+  sel.innerHTML='<option value="">All Cuisine</option>'+c.map(x=>`<option value="${x}"${x===cur?' selected':''}>${x}</option>`).join('');
+}
+function setPriceLabel(){document.getElementById('price-val').textContent=`฿${Number(document.getElementById('f-price').value).toLocaleString()}`;}
+function renderTable(){
+  if(!currentData)return;
+  const cuisine=document.getElementById('f-cuisine').value;
+  const scenario=document.getElementById('f-scenario').value;
+  const risk=document.getElementById('f-risk').value;
+  const maxP=Number(document.getElementById('f-price').value);
+  let rows=currentData.restaurants.filter(r=>{
+    if(cuisine&&r.cuisine!==cuisine)return false;
+    if(scenario==='group'&&!r.group)return false;
+    if(scenario==='fast'&&!r.fast)return false;
+    if(scenario==='meeting'&&!r.meeting)return false;
+    if(scenario==='budget'&&!r.budget)return false;
+    if(risk&&r.risk!==risk)return false;
+    if(r.price>maxP)return false;
+    return true;
+  }).sort((a,b)=>b.score-a.score);
+  const tbody=document.getElementById('tbl-rows');
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="14" class="no-rows">🍽 No restaurants match these filters</td></tr>`;return;}
+  tbody.innerHTML=rows.map((r,i)=>{
+    const sc=r.score>=80?'var(--mint)':r.score>=70?'var(--amber)':'var(--muted)';
+    const rp=r.risk==='low'?'pg':r.risk==='medium'?'pa':'pr';
+    const sp=r.speed==='fast'?'pg':r.speed==='slow'?'pa':'pm';
+    const np=r.noise==='quiet'?'pg':r.noise==='loud'?'pr':'pm';
+    return `<tr>
+      <td style="color:var(--muted);font-size:0.72rem;font-weight:700">${i+1}</td>
+      <td class="td-name">${r.name}${(r.cautions||[]).length?'<span style="color:var(--red);margin-left:0.3rem">⚠</span>':''}</td>
+      <td style="color:var(--text2);font-size:0.75rem">${r.cuisine}</td>
+      <td class="td-price">฿${r.price}</td>
+      <td style="font-weight:700">⭐${r.rating}<br/><span style="color:var(--muted);font-size:0.65rem">${(r.reviews||0).toLocaleString()}</span></td>
+      <td style="font-weight:900;color:${sc}">${r.score}</td>
+      <td style="font-size:0.72rem;font-weight:700;color:${r.conf<65?'var(--red)':r.conf<75?'var(--amber)':'var(--muted)'}">${r.conf}%</td>
+      <td>${r.group?'<span class="pill pg">✓</span>':'<span class="pill pm">—</span>'}</td>
+      <td><span class="pill ${sp}">${r.speed}</span></td>
+      <td><span class="pill ${np}">${r.noise}</span></td>
+      <td><span class="pill ${rp}">${r.risk}</span></td>
+      <td style="font-size:0.68rem;color:var(--muted)">${r.hours||'—'}</td>
+      <td style="color:var(--text2);font-size:0.72rem;white-space:normal;max-width:160px">${r.note}</td>
+      <td><a class="map-link" href="${r.map}" target="_blank">MAP ↗</a></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ── HELPERS ── */
+function setStep(step,pct,msg){
+  [1,2,3,4].forEach(i=>{
+    document.getElementById(`step-${i}`).className='progress-step'+(i<step?' done':i===step?' active':'');
+  });
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-msg').textContent=msg;
+}
+function setLoading(on){
+  document.getElementById('progress-wrap').classList.toggle('active',on);
+  document.getElementById('search-btn').disabled=on;
+  if(!on)document.getElementById('progress-fill').style.width='100%';
+}
+function showError(msg){
+  const el=document.getElementById('error-box');
+  if(!el)return;
+  el.textContent=msg?`⚠ ${msg}`:'';
+  el.classList.toggle('active',!!msg);
+}
+function tog(bodyId,togId){
+  const body=document.getElementById(bodyId),tog=document.getElementById(togId);
+  const hidden=body.style.display==='none';
+  body.style.display=hidden?'':'none';
+  tog.textContent=hidden?'▲':'▼';
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+/* ── INIT: load default Siam data ── */
+setPriceLabel();
+currentData = DEFAULT_DATA;
+renderAll(DEFAULT_DATA);
+
+if(window.location.protocol==='file:'){
+  document.getElementById('cors-warn').style.display='block';
+}
+</script>
+</body>
+</html>
