@@ -729,12 +729,11 @@ async function readGoogleSheetDirect(area) {
       const res = await attempt();
       if (res.ok) {
         const text = await res.text();
-        // Strip any HTML wrapping (allorigins sometimes wraps)
         const jsonText = text.trim().startsWith('[') || text.trim().startsWith('{')
           ? text
           : text.replace(/^[^[{]*/, '').replace(/[^}\]]*$/, '');
         raw = JSON.parse(jsonText);
-        if (Array.isArray(raw) && raw.length >= 2) break;
+        if (Array.isArray(raw) && raw.length >= 1) break;
         raw = null;
       }
     } catch(e) {
@@ -742,18 +741,31 @@ async function readGoogleSheetDirect(area) {
     }
   }
 
-  if (!raw || !Array.isArray(raw) || raw.length < 2) {
+  if (!raw || !Array.isArray(raw) || raw.length < 1) {
     throw new Error(`Could not load data from Apps Script. Check that the deployment access is set to "Anyone". (${lastErr})`);
   }
 
-  const headers = raw[0].map(h => String(h).trim().toLowerCase().replace(/\s+/g,'_'));
-  const data = raw.slice(1)
-    .filter(r => r.some(c => String(c).trim()))
-    .map(r => {
+  let data;
+  if (Array.isArray(raw[0])) {
+    // Array of arrays — first row is headers
+    const headers = raw[0].map(h => String(h).trim().toLowerCase().replace(/\s+/g,'_'));
+    data = raw.slice(1)
+      .filter(r => r.some(c => String(c).trim()))
+      .map(r => {
+        const obj = {};
+        headers.forEach((h, i) => { obj[h] = String(r[i] ?? '').trim(); });
+        return obj;
+      });
+  } else {
+    // Array of objects — keys are already column headers
+    data = raw.map(r => {
       const obj = {};
-      headers.forEach((h, i) => { obj[h] = String(r[i] ?? '').trim(); });
+      Object.keys(r).forEach(k => {
+        obj[k.trim().toLowerCase().replace(/\s+/g,'_')] = String(r[k] ?? '').trim();
+      });
       return obj;
     });
+  }
 
   return normaliseRows(data);
 }
