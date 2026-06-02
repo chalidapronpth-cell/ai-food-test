@@ -486,10 +486,10 @@ table.dt tr:hover td{background:#fff8f6}
 
   <div class="progress-wrap" id="progress-wrap">
     <div class="progress-steps">
-      <div class="progress-step" id="step-1">1 · Trigger n8n</div>
+      <div class="progress-step" id="step-1">1 · Read Sheet</div>
       <div class="progress-step" id="step-2">2 · Apify Scraping</div>
-      <div class="progress-step" id="step-3">3 · Read Sheet</div>
-      <div class="progress-step" id="step-4">4 · AI Scoring</div>
+      <div class="progress-step" id="step-3">3 · AI Scoring</div>
+      <div class="progress-step" id="step-4">4 · Rendering</div>
     </div>
     <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill"></div></div>
     <div class="progress-msg" id="progress-msg">Starting…</div>
@@ -543,8 +543,8 @@ table.dt tr:hover td{background:#fff8f6}
     </div>
 
     <div class="section-head" onclick="tog('askb','askt')">
-      <span class="section-tag tag-mint">AI Ask 🤖</span>
-      <span class="section-title" id="ask-title">Ask about this dataset</span>
+      <span class="section-tag tag-mint">Smart Search 🔍</span>
+      <span class="section-title" id="ask-title">Search this dataset by keywords</span>
       <span class="section-toggle" id="askt">▲</span>
     </div>
     <div id="askb">
@@ -601,13 +601,18 @@ table.dt tr:hover td{background:#fff8f6}
 </div>
 
 <footer class="site-footer">
-  🍜 Bangkok Food Finder · Data: <span>Apify Google Maps</span> · AI: <span>Google Gemini (Free)</span> · Built with ♥ for team dinners
+  🍜 Bangkok Food Finder · Data: <span>Apify Google Maps</span> · Scoring: <span>Google Gemini</span> · Search: <span>Keyword Engine</span> · Built with ♥ for team dinners
 </footer>
 
 <script>
 const APIFY_TOKEN = 'apify_api_PfXmaXdGkkzyemUvO3Xancc9fkMLDS1ewRMp';
 let GEMINI_KEY = 'AQ.Ab8RN6KD5dK9CuhAzbz-aiNEWcmRQ8hQxzHNurZQ13Z9COD2nQ';
 const GEMINI_MODELS = ['gemini-2.5-flash-preview-05-20','gemini-2.0-flash','gemini-2.0-flash-lite'];
+
+// ── APPS SCRIPT CONFIG ──
+// Paste your Google Apps Script Web App URL here after deploying
+// Extensions → Apps Script → Deploy → New deployment → Web app → Anyone → Deploy
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYs2Cmq1xykiNHcnQdyHdRhhM40u7dg9A-843BGmUWRyonKNhAmpk0Wtib61jIXkMI_A/exec';
 
 let currentData = null;
 let currentScenario = 'Safe Bet';
@@ -677,9 +682,9 @@ async function loadFromSheet() {
   const btn = document.getElementById('sheet-btn');
   btn.disabled = true;
   btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="#34a853"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Reading…`;
-  setSheetStatus('📊 Reading Google Sheet via n8n…', 'var(--muted)');
+  setSheetStatus('📊 Reading Google Sheet directly…', 'var(--muted)');
   try {
-    const raw = await callReadSheet(area);
+    const raw = await readGoogleSheetDirect(area);
     await processRawData(raw, area);
   } catch(e) {
     setSheetStatus('⚠ ' + e.message, 'var(--red)');
@@ -702,46 +707,106 @@ async function reloadSheet() {
   btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg> Retry`;
 }
 
-/* ── reads Google Sheet via n8n read-sheet webhook ── */
-async function callReadSheet(area) {
-  if (!N8N_READ_URL || N8N_READ_URL === 'YOUR_N8N_READ_SHEET_WEBHOOK_URL') {
-    throw new Error('N8N_READ_URL not set. Paste your n8n Read Sheet Production Webhook URL in the HTML.');
+/* ── reads Google Sheet via Apps Script JSON web app ── */
+async function readGoogleSheetDirect(area) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    throw new Error('APPS_SCRIPT_URL not set.');
   }
-  let res;
-  try {
-    res = await fetch(`${N8N_READ_URL}?area=${encodeURIComponent(area)}`, {
-      method: 'GET', headers: { 'Accept': 'application/json' }
+
+  let raw = null;
+
+  // Apps Script redirects — try with redirect:follow first, then CORS proxies
+  const attempts = [
+    () => fetch(`https://corsproxy.io/?${encodeURIComponent(APPS_SCRIPT_URL)}`),
+    () => fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(APPS_SCRIPT_URL)}`),
+    () => fetch(`https://thingproxy.freeboard.io/fetch/${APPS_SCRIPT_URL}`),
+    () => fetch(APPS_SCRIPT_URL, { redirect: 'follow' }),
+  ];
+
+  let lastErr = '';
+  for (const attempt of attempts) {
+    try {
+      const res = await attempt();
+      if (res.ok) {
+        const text = await res.text();
+        // Strip any HTML wrapping (allorigins sometimes wraps)
+        const jsonText = text.trim().startsWith('[') || text.trim().startsWith('{')
+          ? text
+          : text.replace(/^[^[{]*/, '').replace(/[^}\]]*$/, '');
+        raw = JSON.parse(jsonText);
+        if (Array.isArray(raw) && raw.length >= 2) break;
+        raw = null;
+      }
+    } catch(e) {
+      lastErr = e.message;
+    }
+  }
+
+  if (!raw || !Array.isArray(raw) || raw.length < 2) {
+    throw new Error(`Could not load data from Apps Script. Check that the deployment access is set to "Anyone". (${lastErr})`);
+  }
+
+  const headers = raw[0].map(h => String(h).trim().toLowerCase().replace(/\s+/g,'_'));
+  const data = raw.slice(1)
+    .filter(r => r.some(c => String(c).trim()))
+    .map(r => {
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = String(r[i] ?? '').trim(); });
+      return obj;
     });
-  } catch(e) {
-    throw new Error(`Cannot reach n8n read-sheet webhook. Is Workflow B active? (${e.message})`);
-  }
-  if (res.status === 404) throw new Error('Read-sheet webhook not found (404). Is Workflow B active in n8n?');
-  if (!res.ok) throw new Error(`n8n read-sheet returned HTTP ${res.status}.`);
-  const data = await res.json();
-  return normaliseRows(Array.isArray(data) ? data : data.data || data.rows || []);
+
+  return normaliseRows(data);
 }
+
+/* ── minimal CSV parser (handles quoted fields with commas) ── */
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.split(/\r?\n/);
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+        else { inQ = !inQ; }
+      } else if (ch === ',' && !inQ) {
+        cols.push(cur); cur = '';
+      } else {
+        cur += ch;
+      }
+    }
+    cols.push(cur);
+    rows.push(cols);
+  }
+  return rows;
+}
+
+/* ── kept for backwards compat (no longer used) ── */
+async function callReadSheet(area) { return readGoogleSheetDirect(area); }
 
 /* ── normalises raw sheet rows to a consistent shape ── */
 function normaliseRows(rows) {
   if (!rows.length) throw new Error('Google Sheet is empty — run a Search first to populate it.');
   const seen = new Set();
   return rows
-    .filter(r => r.title || r.Title || r.name || r.Name)
+    .filter(r => r.title || r.name)
     .filter(r => {
-      const t = (r.title || r.Title || r.name || r.Name || '').trim();
+      const t = (r.title || r.name || '').trim();
       if (seen.has(t)) return false; seen.add(t); return true;
     })
     .map(r => ({
-      title:        r.title        || r.Title        || r.name         || r.Name        || '',
-      subTitle:     r.subTitle     || r.subtitle      || r.description  || r.Description || '',
-      price:        r.price        || r.Price         || '',
-      categoryName: r.categoryName || r.category      || r.Category     || r.type        || 'Restaurant',
-      address:      r.address      || r.Address       || '',
-      neighborhood: r.neighborhood || r.Neighborhood  || r.area         || r.Area        || '',
-      city:         r.city         || r.City          || 'Bangkok',
-      totalScore:   r.totalScore   || r.rating        || r.Rating       || null,
-      reviewsCount: r.reviewsCount || r.reviews       || r.Reviews      || null,
-      openingHours: r.openingHours || []
+      title:        r.title        || r.name         || '',
+      subTitle:     r.subtitle     || r.description  || '',
+      price:        r.price        || '',
+      categoryName: r.categoryname || r.category     || 'Restaurant',
+      address:      r.address      || '',
+      neighborhood: r.neighborhood || r.street       || '',
+      city:         r.city         || 'Bangkok',
+      totalScore:   parseFloat(r.totalscore || r.rating || '') || null,
+      reviewsCount: parseInt(r.reviewscount || r.reviews || '') || null,
+      openingHours: []   // not available as flat column in this export
     }));
 }
 
@@ -758,7 +823,7 @@ async function processRawData(raw, area) {
   isDefaultData = false;
   renderAll(scored);
   setLoading(false);
-  setSheetStatus(`✅ Loaded ${raw.length} restaurants from Google Sheet via n8n`, '#34a853');
+  setSheetStatus(`✅ Loaded ${raw.length} restaurants directly from Google Sheet`, '#34a853');
 }
 
 function saveWebhook() {}
@@ -1080,45 +1145,139 @@ function renderTop3(){
   }).join('');
 }
 
-/* ── AI ASK ── */
+/* ── AI ASK — keyword search over currentData, no external API ── */
 function fillAsk(q){document.getElementById('ask-input').value=q;}
 document.getElementById('ask-input').addEventListener('keydown',e=>{if(e.key==='Enter')doAsk();});
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.activeElement.id === 'custom-scenario-input') runCustomScenario();
 });
 
-async function doAsk(){
-  const q=document.getElementById('ask-input').value.trim();
-  if(!q||!currentData)return;
-  const btn=document.getElementById('ask-btn');
+function doAsk(){
+  const q = document.getElementById('ask-input').value.trim();
+  if (!q || !currentData) return;
   document.getElementById('ask-answer').classList.remove('active');
   document.getElementById('ask-err').classList.remove('active');
-  document.getElementById('ask-thinking').classList.add('active');
-  btn.disabled=true;
-  const dataset=currentData.restaurants.map(r=>`${r.name}|${r.cuisine}|฿${r.price}|★${r.rating}(${r.reviews}rev)|Score${r.score}|Conf${r.conf}%|Group:${r.group}|Fast:${r.fast}|Meeting:${r.meeting}|Budget:${r.budget}|Risk:${r.risk}|Noise:${r.noise}|Hours:${r.hours}|${r.note}`).join('\n');
-  const sysPrompt=`You are a restaurant analyst. Answer ONLY from dataset. Be concise. Bold restaurant names. Use bullet points. End with one recommendation. Area:${currentData.area} Bangkok, Group:8-12 people.\nDATA:\n${dataset}`;
-  try{
-    let text='';
-    for(const model of GEMINI_MODELS){
-      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{
-        method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${GEMINI_KEY}`},
-        body:JSON.stringify({contents:[{parts:[{text:sysPrompt+'\n\nQ: '+q}]}],generationConfig:{temperature:0.3,maxOutputTokens:600}})
-      });
-      const data=await res.json();
-      if(res.ok){text=data.candidates?.[0]?.content?.parts?.[0]?.text||'No response.';break;}
-      if(res.status!==429&&!data.error?.message?.includes('quota')) throw new Error(data.error?.message||`API error ${res.status}`);
-    }
-    if(!text) throw new Error('Quota exceeded. Try again in a few minutes.');
-    document.getElementById('ask-thinking').classList.remove('active');
-    document.getElementById('ask-q').textContent=`Q: ${q}`;
-    document.getElementById('ask-body').innerHTML=fmtAnswer(text);
+
+  try {
+    const answer = searchDataset(q, currentData.restaurants, currentData.area);
+    document.getElementById('ask-q').textContent = `Q: ${q}`;
+    document.getElementById('ask-body').innerHTML = answer;
     document.getElementById('ask-answer').classList.add('active');
-  }catch(e){
-    document.getElementById('ask-thinking').classList.remove('active');
-    document.getElementById('ask-err').textContent=`Error: ${e.message}`;
+  } catch(e) {
+    document.getElementById('ask-err').textContent = `Error: ${e.message}`;
     document.getElementById('ask-err').classList.add('active');
   }
-  btn.disabled=false;
+}
+
+/* ── keyword-based search engine ── */
+function searchDataset(q, restaurants, area) {
+  const ql = q.toLowerCase();
+
+  // ── helpers ──────────────────────────────────────────────────────────
+  const mention = (...words) => words.some(w => ql.includes(w));
+  const priceMatch = ql.match(/฿?\s*(\d{3,5})/);
+  const maxPrice = priceMatch ? parseInt(priceMatch[1]) : null;
+
+  // parse "N people" or group-size cues
+  const groupMatch = ql.match(/(\d+)\s*(people|person|pax|guests?|heads?)/);
+  const groupSize = groupMatch ? parseInt(groupMatch[1]) : null;
+  const wantsGroup = groupSize >= 8 || mention('group','team','staff','colleagues','large party','big group','8','9','10','11','12');
+
+  // cuisine keywords → partial match against r.cuisine
+  const cuisineWords = ['thai','japanese','italian','chinese','korean','indian','western','seafood','bbq','sushi','ramen','pizza','burger','vegetarian','vegan','cantonese','french','mexican','fusion','dessert','café','cafe','noodle','steamboat','suki'];
+  const wantedCuisine = cuisineWords.find(c => ql.includes(c));
+
+  // scenario cues
+  const wantsBudget   = mention('cheap','budget','affordable','inexpensive','low cost','under','below','less than');
+  const wantsFast     = mention('fast','quick','quick meal','speedy','no wait','hurry','rush');
+  const wantsMeeting  = mention('meeting','business','client','professional','formal','quiet meeting');
+  const wantsQuiet    = mention('quiet','calm','peaceful','serene','relaxed');
+  const wantsHighRating = mention('best','top','highest rated','most popular','recommended','favourite','favorite');
+  const wantsLowRisk  = mention('safe','reliable','low risk','trustworthy','consistent');
+
+  // ── filter + score ───────────────────────────────────────────────────
+  let pool = restaurants.filter(r => {
+    if (wantsGroup && !r.group) return false;
+    if (maxPrice && r.price > maxPrice) return false;
+    if (wantsBudget && r.price > 400) return false;
+    if (wantsFast && !r.fast) return false;
+    if (wantsMeeting && !r.meeting) return false;
+    if (wantsCuisine && !r.cuisine.toLowerCase().includes(wantedCuisine)) return false;
+    return true;
+  });
+
+  // if nothing passed strict filter, loosen and note it
+  let loosened = false;
+  if (!pool.length) {
+    loosened = true;
+    pool = [...restaurants];
+  }
+
+  // boost score
+  pool = pool.map(r => {
+    let boost = r.score;
+    if (wantsHighRating)  boost += r.rating * 2;
+    if (wantsQuiet && r.noise === 'quiet')   boost += 10;
+    if (wantsLowRisk && r.risk === 'low')    boost += 8;
+    if (wantsBudget && r.budget)             boost += 12;
+    if (wantsFast && r.fast)                 boost += 10;
+    if (wantsMeeting && r.meeting)           boost += 10;
+    if (wantedCuisine && r.cuisine.toLowerCase().includes(wantedCuisine)) boost += 15;
+    return { ...r, _boost: boost };
+  }).sort((a, b) => b._boost - a._boost);
+
+  const top = pool.slice(0, 5);
+
+  // ── build answer ─────────────────────────────────────────────────────
+  const lines = [];
+
+  // context sentence
+  const filters = [];
+  if (wantsGroup) filters.push('group-friendly (8–12 pax)');
+  if (wantedCuisine) filters.push(wantedCuisine + ' cuisine');
+  if (maxPrice) filters.push(`under ฿${maxPrice}/head`);
+  if (wantsBudget && !maxPrice) filters.push('budget-friendly');
+  if (wantsFast)    filters.push('quick service');
+  if (wantsMeeting) filters.push('business-suitable');
+  if (wantsQuiet)   filters.push('quiet');
+  if (wantsLowRisk) filters.push('low-risk');
+
+  if (loosened) {
+    lines.push(`<p>No restaurants exactly match all your criteria, so here are the top picks from <strong>${area}</strong> overall:</p>`);
+  } else {
+    const desc = filters.length ? filters.join(', ') : 'your query';
+    lines.push(`<p>Found <strong>${pool.length}</strong> restaurant${pool.length!==1?'s':''} in <strong>${area}</strong> matching <em>${desc}</em>. Top picks:</p>`);
+  }
+
+  // result list
+  lines.push('<ul>');
+  for (const r of top) {
+    const tags = [];
+    if (r.group)   tags.push('👥 Group OK');
+    if (r.fast)    tags.push('⚡ Fast');
+    if (r.meeting) tags.push('💼 Meeting OK');
+    if (r.budget)  tags.push('💰 Budget');
+    if (r.risk === 'low') tags.push('✅ Low Risk');
+    const tagStr = tags.length ? ` · ${tags.join(' · ')}` : '';
+    lines.push(`<li><strong>${r.name}</strong> — ${r.cuisine}, ฿${r.price}/head, ⭐${r.rating}${tagStr}<br/><span style="font-size:0.8rem;color:var(--muted)">${r.note}</span></li>`);
+  }
+  lines.push('</ul>');
+
+  // recommendation
+  if (top.length) {
+    const best = top[0];
+    lines.push(`<p><strong>💡 Recommendation:</strong> <strong>${best.name}</strong> (Score ${best.score}/100) is the top pick — ฿${best.price}/head, ${best.cuisine}, ⭐${best.rating}. ${best.note}</p>`);
+    if ((best.cautions||[]).length) {
+      lines.push(`<p style="font-size:0.8rem;color:var(--red)">⚠ Note: ${best.cautions.join('; ')}</p>`);
+    }
+  }
+
+  // no results fallback
+  if (!top.length) {
+    lines.push('<p>No restaurants found in the current dataset. Try loading data for a specific area first.</p>');
+  }
+
+  return lines.join('');
 }
 
 function fmtAnswer(text){
