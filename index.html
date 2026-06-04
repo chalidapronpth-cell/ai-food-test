@@ -473,12 +473,12 @@ table.dt tr:hover td{background:#fff8f6}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="#34a853"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
         Read from Google Sheet
       </button>
-      <button id="reload-btn" onclick="reloadSheet()"
+      <button id="reload-btn" onclick="updateFromN8N()"
         style="display:flex;align-items:center;gap:0.45rem;padding:0.5rem 1.1rem;background:var(--card);border:1.5px solid var(--pink-border);border-radius:100px;color:var(--pink);font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:800;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 8px rgba(244,113,154,0.12)"
         onmouseover="this.style.background='var(--pink-dim)'" onmouseout="this.style.background='var(--card)'"
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
-        Retry
+        Update
       </button>
     </div>
     <div id="sheet-status" style="text-align:center;font-size:0.75rem;font-weight:700;color:var(--muted);margin-top:0.5rem;display:none"></div>
@@ -695,16 +695,49 @@ async function loadFromSheet() {
   btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="#34a853"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Read from Google Sheet`;
 }
 
-/* ── called by "Retry" button ── */
-async function reloadSheet() {
+/* ── called by "Update" button — triggers n8n to refresh sheet data ── */
+async function updateFromN8N() {
+  const area = document.getElementById('area-input').value.trim() || 'Bangkok';
   const btn = document.getElementById('reload-btn');
   btn.disabled = true;
-  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg> Retrying…`;
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg> Updating…`;
   showError('');
-  setSheetStatus('🔄 Retrying…', 'var(--muted)');
-  await loadFromSheet();
+  setSheetStatus(`🔄 Triggering n8n to update sheet for "${area}"…`, 'var(--muted)');
+
+  try {
+    // Step 1: Fire n8n webhook (no-cors so CORS won't block it)
+    if (N8N_SEARCH_URL && N8N_SEARCH_URL !== 'YOUR_N8N_SEARCH_WEBHOOK_URL') {
+      try {
+        await fetch(`${N8N_SEARCH_URL}?area=${encodeURIComponent(area)}`, {
+          method: 'GET',
+          mode: 'no-cors'
+        });
+      } catch(e) { /* no-cors throws sometimes but request still sent */ }
+    }
+
+    // Step 2: Wait for n8n + Apify to populate the sheet
+    setSheetStatus(`⏳ Waiting for n8n to update sheet (~60s)…`, 'var(--muted)');
+    const waitStart = Date.now();
+    await new Promise(resolve => {
+      const interval = setInterval(() => {
+        const elapsed = Math.round((Date.now() - waitStart) / 1000);
+        setSheetStatus(`⏳ n8n updating sheet… ${elapsed}s elapsed`, 'var(--muted)');
+        if (elapsed >= 60) { clearInterval(interval); resolve(); }
+      }, 2000);
+      setTimeout(() => { clearInterval(interval); resolve(); }, 60000);
+    });
+
+    // Step 3: Reload data from the updated sheet
+    setSheetStatus(`📊 Reading updated data from Google Sheet…`, 'var(--muted)');
+    await loadFromSheet();
+    setSheetStatus(`✅ Sheet updated and reloaded`, '#34a853');
+  } catch(e) {
+    setSheetStatus(`⚠ ${e.message}`, 'var(--red)');
+    showError(e.message);
+  }
+
   btn.disabled = false;
-  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg> Retry`;
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg> Update`;
 }
 
 /* ── reads Google Sheet via Apps Script JSON web app ── */
@@ -931,15 +964,10 @@ DATA:\n${summary}`;
   return parsed;
 }
 
-/* ── PIPELINE — Search button → n8n read-sheet → score → render ── */
+/* ── PIPELINE — Search button → read sheet → filter by area → render ── */
 async function runPipeline() {
   const area = document.getElementById('area-input').value.trim();
   if (!area) { showError('Please enter an area name first.'); return; }
-
-  if (!N8N_READ_URL || N8N_READ_URL === 'YOUR_N8N_READ_SHEET_WEBHOOK_URL') {
-    showError('N8N_READ_URL not set.');
-    return;
-  }
 
   setLoading(true);
   showError('');
@@ -949,42 +977,31 @@ async function runPipeline() {
   currentScenario = 'Safe Bet';
 
   try {
-    // Step 1: Trigger n8n search webhook using no-cors (fire and forget)
-    if (N8N_SEARCH_URL && N8N_SEARCH_URL !== 'YOUR_N8N_SEARCH_WEBHOOK_URL') {
-      setStep(1, 10, `Triggering n8n scrape for "${area}"…`);
-      try {
-        // Use no-cors to avoid CORS error — we don't need the response
-        await fetch(`${N8N_SEARCH_URL}?area=${encodeURIComponent(area)}`, {
-          method: 'GET',
-          mode: 'no-cors'
-        });
-      } catch(e) {
-        // Ignore — no-cors may still throw but n8n received the call
-      }
-    }
+    // Step 1: Read from Google Sheet
+    setStep(1, 25, `Reading Google Sheet…`);
+    const allRows = await readGoogleSheetDirect(area);
 
-    // Step 2: Wait for Apify to scrape (n8n Wait node handles this)
-    setStep(2, 30, `Scraping Google Maps for "${area}"… (this takes ~1–2 min)`);
-    const waitStart = Date.now();
-    let dots = 0;
-    await new Promise(resolve => {
-      const interval = setInterval(() => {
-        dots = (dots + 1) % 4;
-        const elapsed = Math.round((Date.now() - waitStart) / 1000);
-        const pct = Math.min(30 + Math.round(elapsed / 1.2), 65);
-        setStep(2, pct, `Scraping Google Maps${'.'.repeat(dots + 1)} (${elapsed}s)`);
-        if (elapsed >= 90) { clearInterval(interval); resolve(); }
-      }, 2000);
-      // Also resolve after 90 seconds max wait
-      setTimeout(() => { clearInterval(interval); resolve(); }, 90000);
+    // Step 2: Filter by area — match against neighborhood, address, title, searchString
+    setStep(2, 55, `Filtering for "${area}"…`);
+    const q = area.toLowerCase();
+    const filtered = allRows.filter(r => {
+      const hay = [
+        r.neighborhood, r.address, r.title, r.subTitle,
+        r.street, r.searchString, r.city
+      ].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
     });
 
-    // Step 3: Read results from sheet
-    setStep(3, 70, 'Reading results from Google Sheet…');
-    const raw = await callReadSheet(area);
+    if (!filtered.length) {
+      setLoading(false);
+      showError(`No restaurants found in the Google Sheet for "${area}". Try Siam, Thonglor, Asok, Ari, or Phrom Phong.`);
+      setSheetStatus(`⚠ No matches in sheet for "${area}"`, 'var(--red)');
+      return;
+    }
 
-    // Step 4: Score + render
-    await processRawData(raw, area);
+    // Step 3: Process and render
+    setStep(3, 80, `Processing ${filtered.length} restaurants…`);
+    await processRawData(filtered, area);
 
   } catch(e) {
     setLoading(false);
@@ -1235,53 +1252,56 @@ function doAsk(){
   }
 }
 
-/* ── keyword-based search engine ── */
+/* ── keyword-based search engine — reads ONLY from loaded sheet data ── */
 function searchDataset(q, restaurants, area) {
   const ql = q.toLowerCase();
-
-  // ── helpers ──────────────────────────────────────────────────────────
   const mention = (...words) => words.some(w => ql.includes(w));
   const priceMatch = ql.match(/฿?\s*(\d{3,5})/);
   const maxPrice = priceMatch ? parseInt(priceMatch[1]) : null;
 
-  // parse "N people" or group-size cues
   const groupMatch = ql.match(/(\d+)\s*(people|person|pax|guests?|heads?)/);
   const groupSize = groupMatch ? parseInt(groupMatch[1]) : null;
-  const wantsGroup = groupSize >= 8 || mention('group','team','staff','colleagues','large party','big group','8','9','10','11','12');
+  const wantsGroup = (groupSize && groupSize >= 8) || mention('group','team','staff','colleagues','large party','big group');
 
-  // cuisine keywords → partial match against r.cuisine
-  const cuisineWords = ['thai','japanese','italian','chinese','korean','indian','western','seafood','bbq','sushi','ramen','pizza','burger','vegetarian','vegan','cantonese','french','mexican','fusion','dessert','café','cafe','noodle','steamboat','suki'];
+  const cuisineWords = ['thai','japanese','italian','chinese','korean','indian','western','seafood','bbq','sushi','ramen','pizza','burger','vegetarian','vegan','cantonese','french','mexican','fusion','dessert','café','cafe','noodle','steamboat','suki','spanish','vietnamese','middle eastern','american'];
   const wantedCuisine = cuisineWords.find(c => ql.includes(c));
 
-  // scenario cues
   const wantsBudget   = mention('cheap','budget','affordable','inexpensive','low cost','under','below','less than');
   const wantsFast     = mention('fast','quick','quick meal','speedy','no wait','hurry','rush');
-  const wantsMeeting  = mention('meeting','business','client','professional','formal','quiet meeting');
+  const wantsMeeting  = mention('meeting','business','client','professional','formal');
   const wantsQuiet    = mention('quiet','calm','peaceful','serene','relaxed');
   const wantsHighRating = mention('best','top','highest rated','most popular','recommended','favourite','favorite');
   const wantsLowRisk  = mention('safe','reliable','low risk','trustworthy','consistent');
 
-  // ── filter + score ───────────────────────────────────────────────────
+  // Tokenize the question for free-text matching against restaurant fields
+  const stopWords = new Set(['the','a','an','is','are','where','what','which','can','find','show','me','for','to','in','at','of','with','i','want','need','do','have','any','please','restaurant','restaurants','place','places','around','near','here']);
+  const queryTokens = ql.split(/\W+/).filter(t => t.length > 2 && !stopWords.has(t));
+
+  // ── filter ──
   let pool = restaurants.filter(r => {
     if (wantsGroup && !r.group) return false;
     if (maxPrice && r.price > maxPrice) return false;
     if (wantsBudget && r.price > 400) return false;
     if (wantsFast && !r.fast) return false;
     if (wantsMeeting && !r.meeting) return false;
-    if (wantsCuisine && !r.cuisine.toLowerCase().includes(wantedCuisine)) return false;
+    if (wantedCuisine && !r.cuisine.toLowerCase().includes(wantedCuisine)) return false;
     return true;
   });
 
-  // if nothing passed strict filter, loosen and note it
   let loosened = false;
   if (!pool.length) {
     loosened = true;
     pool = [...restaurants];
   }
 
-  // boost score
+  // ── score / boost ──
   pool = pool.map(r => {
     let boost = r.score;
+    const hay = [r.name, r.cuisine, r.note].filter(Boolean).join(' ').toLowerCase();
+    // free-text token match boost
+    for (const t of queryTokens) {
+      if (hay.includes(t)) boost += 8;
+    }
     if (wantsHighRating)  boost += r.rating * 2;
     if (wantsQuiet && r.noise === 'quiet')   boost += 10;
     if (wantsLowRisk && r.risk === 'low')    boost += 8;
@@ -1294,12 +1314,10 @@ function searchDataset(q, restaurants, area) {
 
   const top = pool.slice(0, 5);
 
-  // ── build answer ─────────────────────────────────────────────────────
+  // ── build answer ──
   const lines = [];
-
-  // context sentence
   const filters = [];
-  if (wantsGroup) filters.push('group-friendly (8–12 pax)');
+  if (wantsGroup) filters.push('group-friendly');
   if (wantedCuisine) filters.push(wantedCuisine + ' cuisine');
   if (maxPrice) filters.push(`under ฿${maxPrice}/head`);
   if (wantsBudget && !maxPrice) filters.push('budget-friendly');
@@ -1309,13 +1327,12 @@ function searchDataset(q, restaurants, area) {
   if (wantsLowRisk) filters.push('low-risk');
 
   if (loosened) {
-    lines.push(`<p>No restaurants exactly match all your criteria, so here are the top picks from <strong>${area}</strong> overall:</p>`);
+    lines.push(`<p>No exact match in the sheet for those criteria — showing top picks from <strong>${area}</strong>:</p>`);
   } else {
     const desc = filters.length ? filters.join(', ') : 'your query';
-    lines.push(`<p>Found <strong>${pool.length}</strong> restaurant${pool.length!==1?'s':''} in <strong>${area}</strong> matching <em>${desc}</em>. Top picks:</p>`);
+    lines.push(`<p>Found <strong>${pool.length}</strong> restaurant${pool.length!==1?'s':''} in the sheet for <strong>${area}</strong> matching <em>${desc}</em>:</p>`);
   }
 
-  // result list
   lines.push('<ul>');
   for (const r of top) {
     const tags = [];
@@ -1329,18 +1346,13 @@ function searchDataset(q, restaurants, area) {
   }
   lines.push('</ul>');
 
-  // recommendation
   if (top.length) {
     const best = top[0];
-    lines.push(`<p><strong>💡 Recommendation:</strong> <strong>${best.name}</strong> (Score ${best.score}/100) is the top pick — ฿${best.price}/head, ${best.cuisine}, ⭐${best.rating}. ${best.note}</p>`);
-    if ((best.cautions||[]).length) {
-      lines.push(`<p style="font-size:0.8rem;color:var(--red)">⚠ Note: ${best.cautions.join('; ')}</p>`);
-    }
+    lines.push(`<p><strong>💡 Recommendation:</strong> <strong>${best.name}</strong> — ฿${best.price}/head, ${best.cuisine}, ⭐${best.rating}. ${best.note}</p>`);
   }
 
-  // no results fallback
   if (!top.length) {
-    lines.push('<p>No restaurants found in the current dataset. Try loading data for a specific area first.</p>');
+    lines.push('<p>No restaurants in the sheet for this area yet. Try Search or Update first.</p>');
   }
 
   return lines.join('');
